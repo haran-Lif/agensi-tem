@@ -1,0 +1,60 @@
+-- [1] 업무가 어느 접수 월에 들어 있는지 집계
+select
+  to_char(request_date, 'YYYY-MM') as request_month,
+  count(*) as task_count
+from public.task_history
+group by 1
+order by 1;
+
+-- [2] 접수일이 2026년 6월이 아닌 업무 확인
+select
+  task_id,
+  project_id,
+  request_date,
+  due_date,
+  completed_date,
+  task_title,
+  status
+from public.task_history
+where request_date is null
+   or request_date < date '2026-06-01'
+   or request_date >= date '2026-07-01'
+order by request_date nulls first, task_id;
+
+-- [3] 6월 접수 업무 중 완료 예정일 또는 실제 완료일이 다른 달인 건 확인
+-- 접수 월 기준 월간 집계에는 6월 업무로 포함되며, 날짜 자체는 오류가 아닐 수 있습니다.
+select
+  task_id,
+  request_date,
+  due_date,
+  completed_date,
+  task_title,
+  status
+from public.task_history
+where request_date >= date '2026-06-01'
+  and request_date < date '2026-07-01'
+  and (
+    due_date < date '2026-06-01'
+    or due_date >= date '2026-07-01'
+    or completed_date < date '2026-06-01'
+    or completed_date >= date '2026-07-01'
+  )
+order by request_date, task_id;
+
+-- [4] 날짜 컬럼별 월 분포를 한 번에 비교
+select 'request_date' as date_type, to_char(request_date, 'YYYY-MM') as month, count(*) as count
+from public.task_history group by 1, 2
+union all
+select 'due_date', to_char(due_date, 'YYYY-MM'), count(*)
+from public.task_history group by 1, 2
+union all
+select 'completed_date', to_char(completed_date, 'YYYY-MM'), count(*)
+from public.task_history group by 1, 2
+order by date_type, month;
+
+-- 주의: 아래처럼 모든 날짜를 일괄 6월로 바꾸면 실제 일정 정보가 손상됩니다.
+-- 먼저 [2] 결과에서 잘못된 task_id를 확정한 뒤 개별 수정하세요.
+-- 예시:
+-- update public.task_history
+-- set request_date = date '2026-06-01'
+-- where task_id in ('수정할_업무ID_1', '수정할_업무ID_2');

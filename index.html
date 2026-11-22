@@ -1,0 +1,1045 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>회사명 | 프로젝트 운영 관제</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body class="auth-pending">
+    <div class="auth-gate" id="authGate">
+      <section class="login-panel" aria-labelledby="loginTitle">
+        <div class="login-brand">
+          <div class="brand-mark"><span class="brand-mark-text">OPS</span><img class="brand-logo" alt="회사 로고" hidden /></div>
+          <div>
+            <strong class="brand-company-name">회사명</strong>
+            <span class="brand-subtitle">프로젝트 운영 관제</span>
+          </div>
+        </div>
+        <div class="login-copy">
+          <p>AGENCY OPERATIONS</p>
+          <h1 id="loginTitle">로그인</h1>
+          <span>발급받은 계정 ID와 비밀번호를 입력하세요.</span>
+        </div>
+        <form id="loginForm" class="login-form">
+          <label>아이디<input id="loginId" name="loginId" autocomplete="username" placeholder="계정 ID" required /></label>
+          <label>비밀번호<input id="loginPassword" name="password" type="password" autocomplete="current-password" placeholder="비밀번호" required /></label>
+          <p id="loginMessage" class="login-message" aria-live="polite"></p>
+          <button id="loginSubmit" class="primary" type="submit">로그인</button>
+        </form>
+        <p class="login-footnote">계정 정보는 Supabase 인증 서버에서 확인합니다.</p>
+      </section>
+    </div>
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark"><span class="brand-mark-text">OPS</span><img class="brand-logo" alt="회사 로고" hidden /></div>
+        <div>
+          <strong class="brand-company-name">회사명</strong>
+          <span class="brand-subtitle">프로젝트 운영 관제</span>
+        </div>
+      </div>
+      <nav class="nav" aria-label="주요 메뉴">
+        <div class="nav-mode active" data-menu-mode="operator">
+          <span class="nav-group-label" data-nav-section="personal">개인 업무</span>
+          <button class="nav-item" data-nav-section="personal" data-view="myWork" data-title="담당자 업무 현황">담당자 업무 현황</button>
+          <button class="nav-item notification-nav-item" data-nav-section="personal" data-view="notifications" data-title="통합 알림센터">통합 알림센터 <span class="notification-nav-badge" hidden>0</span></button>
+          <span class="nav-group-label" data-nav-section="control">운영 관제</span>
+          <button class="nav-item active" data-nav-section="control" data-view="dashboard" data-title="대시보드">대시보드</button>
+          <button class="nav-item" data-nav-section="control" data-view="daily" data-title="일간 현황">일간 현황</button>
+          <button class="nav-item" data-nav-section="control" data-view="monthly" data-title="월간 현황">월간 현황</button>
+          <button class="nav-item" data-nav-section="control" data-view="gantt" data-title="간트 차트">간트 차트</button>
+          <button class="nav-item" data-nav-section="control" data-view="resource" data-title="리소스 관제">리소스 관제</button>
+          <button class="nav-item" data-nav-section="control" data-view="health" data-title="프로젝트 건강도">프로젝트 건강도</button>
+          <span class="nav-group-label" data-nav-section="task">업무 처리</span>
+          <button class="nav-item" data-nav-section="task" data-view="standard" data-title="업무 등록">업무 등록</button>
+          <button class="nav-item" data-nav-section="task" data-view="taskStatus" data-title="업무 현황">업무 현황</button>
+          <button class="nav-item" data-nav-section="task" data-view="workResourceCreate" data-title="자료 등록">자료 등록</button>
+          <button class="nav-item" data-nav-section="task" data-view="workResources" data-title="자료 확인">자료 확인</button>
+          <span class="nav-group-label" data-nav-section="business">경영/외부</span>
+          <button class="nav-item" data-nav-section="business" data-view="profit" data-title="수익성&계약정보">수익성&계약정보</button>
+          <button class="nav-item" data-nav-section="business" data-view="portal" data-title="고객 포털">고객 포털</button>
+        </div>
+        <div class="nav-mode" data-menu-mode="admin">
+          <span class="nav-group-label" data-nav-section="master">기준 정보</span>
+          <button class="nav-item" data-nav-section="master" data-view="projectConfig" data-title="프로젝트 구성">프로젝트 구성</button>
+          <button class="nav-item" data-nav-section="master" data-view="companyGroup" data-title="회사 업무 그룹">회사 업무 그룹</button>
+          <button class="nav-item" data-nav-section="master" data-view="projectSetting" data-title="프로젝트 작업 세팅">프로젝트 작업 세팅</button>
+          <button class="nav-item" data-nav-section="master" data-view="deliverableSetting" data-title="업무 템플릿">업무 템플릿</button>
+          <button class="nav-item" data-nav-section="master" data-view="employeeReview" data-title="내부 직원평가">내부 직원평가</button>
+          <button class="nav-item" data-nav-section="master" data-view="employeeReviewManagement" data-title="직원평가관리">직원평가관리</button>
+          <span class="nav-group-label" data-nav-section="system">시스템 관리</span>
+          <button class="nav-item" data-nav-section="system" data-view="notificationSetting" data-title="알림 규칙 설정">알림 규칙 설정</button>
+          <button class="nav-item" data-nav-section="system" data-view="accountSetting" data-title="계정·권한 관리">계정·권한 관리</button>
+          <button class="nav-item" data-nav-section="system" data-view="excelUpload" data-title="Excel 데이터 업로드">Excel 데이터 업로드</button>
+          <button class="nav-item" data-nav-section="system" data-view="systemSetting" data-title="시스템 설정">시스템 설정</button>
+        </div>
+      </nav>
+      <div class="sidebar-footer">
+        <button id="modeToggle" type="button">관리자 메뉴</button>
+      </div>
+    </aside>
+
+    <main class="app">
+      <header class="topbar">
+        <div>
+          <p id="dataSourceLabel" class="eyebrow">2026-06 · 운영 데이터 기준</p>
+          <h1 id="pageTitle">대시보드</h1>
+        </div>
+        <div class="userbar">
+          <span id="currentUserLabel">로그인 정보를 확인하고 있습니다.</span>
+          <button id="dbSaveStatus" class="db-save-status idle" type="button" title="클릭하면 변경 내용을 즉시 저장합니다.">DB 연결 대기</button>
+          <button id="logoutButton" type="button">로그아웃</button>
+        </div>
+      </header>
+      <p id="dbSaveErrorDetail" class="db-save-error-detail" role="alert" hidden></p>
+
+      <section class="filter-band operator-filter">
+        <label id="clientFilterLabel">고객사<select id="clientFilter"></select></label>
+        <label id="projectFilterLabel">프로젝트 명<select id="projectFilter"></select></label>
+        <label>완료 연도<select id="yearFilter"></select></label>
+        <label>작업 월(완료일 기준)<select id="monthFilter"></select></label>
+        <button id="resetFilters" class="refresh" type="button" title="필터 초기화">↻</button>
+      </section>
+
+      <section class="filter-band admin-filter">
+        <label>팀명<select id="adminTeamFilter"></select></label>
+        <label>등급<select id="adminGradeFilter"></select></label>
+        <label>포지션<select id="adminPositionFilter"></select></label>
+        <button id="resetAdminFilters" class="refresh" type="button" title="필터 초기화">↻</button>
+      </section>
+
+      <section class="view" id="notificationsView">
+        <div class="metric-grid notification-metrics">
+          <article class="metric danger"><span>위험 알림</span><strong id="notificationDangerCount">0</strong><small>즉시 확인이 필요한 항목</small></article>
+          <article class="metric warning"><span>경고 알림</span><strong id="notificationWarningCount">0</strong><small>일정·검수 확인 항목</small></article>
+          <article class="metric"><span>읽지 않음</span><strong id="notificationUnreadCount">0</strong><small>현재 계정 기준</small></article>
+          <article class="metric"><span>처리 완료</span><strong id="notificationResolvedCount">0</strong><small>현재 계정 기준</small></article>
+        </div>
+        <section class="panel">
+          <div class="panel-head notification-panel-head">
+            <div><h2>통합 알림</h2><p>업무 일정, 담당자, 결과물과 검수 상태를 현재 데이터 기준으로 확인합니다.</p></div>
+            <span id="notificationScopeLabel" class="count-pill">접근 범위 0건</span>
+          </div>
+          <div class="notification-toolbar">
+            <label>처리 상태<select id="notificationStatusFilter"><option value="active">미처리</option><option value="all">전체</option><option value="resolved">처리 완료</option></select></label>
+            <label>중요도<select id="notificationSeverityFilter"><option>전체</option><option>위험</option><option>경고</option><option>안내</option></select></label>
+            <label>프로젝트<select id="notificationProjectFilter"></select></label>
+            <label class="notification-search">검색<input id="notificationSearch" type="search" placeholder="업무번호, 제목, 담당자 검색" /></label>
+          </div>
+          <div class="table-wrap">
+            <table class="notification-table">
+              <thead><tr><th>중요도</th><th>알림 내용</th><th>프로젝트</th><th>대상 업무</th><th>기준일</th><th>상태</th><th>관리</th></tr></thead>
+              <tbody id="notificationRows"></tbody>
+            </table>
+          </div>
+          <div class="history-pagination" aria-label="알림 페이지">
+            <button id="notificationPrev" class="secondary icon-button" type="button" aria-label="이전 페이지" title="이전 페이지">‹</button>
+            <span id="notificationPage">1 / 1</span>
+            <button id="notificationNext" class="secondary icon-button" type="button" aria-label="다음 페이지" title="다음 페이지">›</button>
+          </div>
+        </section>
+      </section>
+
+      <section class="view admin-view" id="notificationSettingView">
+        <section id="notificationRulePanel" class="panel notification-rule-panel">
+          <div class="panel-head"><div><h2>알림 규칙 설정</h2><p>저장한 조건은 각 사용자의 접근 가능한 업무에 동일하게 적용됩니다.</p></div><button id="saveNotificationRules" class="primary" type="button">규칙 저장</button></div>
+          <div class="notification-rule-grid">
+            <label class="notification-rule-item"><span><input id="ruleOverdueEnabled" type="checkbox" /> 일정 지연</span><small>완료 예정일이 지난 미완료 업무</small></label>
+            <label class="notification-rule-item"><span><input id="ruleDueSoonEnabled" type="checkbox" /> 일정 임박</span><small>완료 예정일 전 알림</small><input id="ruleDueSoonDays" type="number" min="0" max="30" value="1" aria-label="일정 임박 기준 일수" /></label>
+            <label class="notification-rule-item"><span><input id="ruleReviewEnabled" type="checkbox" /> 검수 대기</span><small>검수 상태가 일정 기간 지속</small><input id="ruleReviewDays" type="number" min="0" max="30" value="2" aria-label="검수 대기 기준 일수" /></label>
+            <label class="notification-rule-item"><span><input id="ruleOwnerEnabled" type="checkbox" /> 담당자 오류</span><small>접수일 기준 유효 담당자 누락</small></label>
+            <label class="notification-rule-item"><span><input id="ruleOutputEnabled" type="checkbox" /> 결과물 누락</span><small>검수·완료 업무에 결과물 없음</small></label>
+            <label class="notification-rule-item"><span><input id="ruleTemplateEnabled" type="checkbox" /> 템플릿 불일치</span><small>업무 템플릿과 연결되지 않은 결과물</small></label>
+            <label class="notification-rule-item"><span><input id="ruleContractEnabled" type="checkbox" /> 계약 종료 예정</span><small>계약 종료 전 프로젝트 알림</small><input id="ruleContractDays" type="number" min="1" max="180" value="30" aria-label="계약 종료 기준 일수" /></label>
+          </div>
+          <p id="notificationRuleMessage" class="form-message"></p>
+        </section>
+      </section>
+
+      <section class="view active" id="dashboardView">
+        <div class="operator-summary-grid">
+          <article class="operator-summary-card">
+            <div><h2>프로젝트별 진행 현황</h2><p>완료율, 긴급 비율, 지연 비율을 비교합니다.</p></div>
+            <span id="projectCount" class="count-pill">0개</span>
+          </article>
+          <article class="operator-summary-card">
+            <div><h2>프로젝트별 이슈 현황</h2><p>수정, 반려, 과부하 비율로 집중 관리 대상을 확인합니다.</p></div>
+            <span id="dashIssueCount" class="count-pill">0개</span>
+          </article>
+        </div>
+        <div class="dashboard-direction-filter" role="group" aria-label="프로젝트 방향성 선택">
+          <button class="dashboard-direction active" data-direction="전체" type="button">전체</button>
+          <button class="dashboard-direction" data-direction="구축" type="button">구축</button>
+          <button class="dashboard-direction" data-direction="운영" type="button">운영</button>
+          <button class="dashboard-direction" data-direction="이커머스" type="button">이커머스</button>
+        </div>
+        <div class="metric-grid">
+          <article class="metric"><span id="dashTotalLabel">요청 건수</span><strong id="dashTotal">0</strong><small id="dashDelta">전월 대비 +0%</small></article>
+          <article class="metric"><span id="dashDoneLabel">완료율</span><strong id="dashDone">0%</strong><small id="dashDoneText">완료 / 전체 요청</small></article>
+          <article class="metric warning"><span id="dashSlaLabel">일정 지연건</span><strong id="dashSla">0건</strong><small id="dashSlaText">정상 처리율 0%</small></article>
+          <article class="metric danger"><span id="dashUrgentLabel">긴급 비율</span><strong id="dashUrgent">0%</strong><small id="dashUrgentText">긴급 요청 / 전체 요청</small></article>
+        </div>
+        <section class="panel">
+          <div class="panel-head"><div><h2>프로젝트 진행 현황 데이터</h2><p>프로젝트별 완료율 그래프와 긴급/일정 지연건을 확인합니다.</p></div></div>
+          <div id="projectProgressList" class="card-list"></div>
+        </section>
+        <section class="panel">
+          <div class="panel-head"><div><h2>구축·운영 종합 단계</h2><p>WBS와 등록 업무의 종합 단계를 기준으로 현재 진행 위치와 세부 상황을 확인합니다.</p></div><span id="projectStageCount" class="count-pill">0개</span></div>
+          <div id="projectStageList" class="project-stage-grid"></div>
+        </section>
+      </section>
+
+      <section class="view" id="dailyView"></section>
+
+      <section class="view" id="monthlyView">
+        <section id="monthlyProjectNotice" class="panel monthly-project-notice hidden">
+          <strong>프로젝트를 선택하세요</strong>
+          <p>상단 프로젝트 선택 후 월간 지표, 업무 목록과 구성원 현황을 확인할 수 있습니다.</p>
+        </section>
+        <div class="tabbar monthly-data-section">
+          <button class="tab active" data-tab="monthWork" type="button">월간 작업 현황</button>
+          <button class="tab" data-tab="monthPerf" type="button">월간 성과 현황</button>
+        </div>
+        <section class="tab-pane active monthly-data-section" id="monthWork">
+          <section class="panel">
+            <div class="panel-head">
+              <div><h2>요청 팀별 업무 목록</h2><p>업무 번호, 유형, 요청자, 상태, 담당자, 기준공수, 결과물을 확인합니다.</p></div>
+              <div class="panel-actions">
+                <span id="taskTableCount" class="count-pill">0건</span>
+                <button id="downloadMonthlyBundle" class="secondary download-button" type="button" title="선택 월의 업무·결과물·작업자 데이터를 한 Excel 파일로 다운로드">⇩ 월 데이터 통합</button>
+              </div>
+            </div>
+            <div class="monthly-download-toolbar">
+              <label>다운로드 시작일<input id="monthlyDownloadFrom" type="date" /></label>
+              <label>다운로드 종료일<input id="monthlyDownloadTo" type="date" /></label>
+              <button id="downloadRangeBundle" class="secondary download-button" type="button" title="지정 기간의 업무·결과물·작업자 데이터를 한 Excel 파일로 다운로드">⇩ 기간 데이터 통합</button>
+            </div>
+            <div class="list-toolbar operator-search"><label>검색<input id="taskSearchInput" type="search" placeholder="업무번호, 고객사, 프로젝트, 유형, 종합 단계, 요청자, 담당자 검색" /></label></div>
+            <div class="table-wrap"><table><thead><tr><th>번호</th><th>고객사</th><th>프로젝트</th><th>유형</th><th>종합 단계</th><th>요청자</th><th>상태</th><th>담당자</th><th>접수일</th><th>완료예정일</th><th id="monthlyActualCompletionHeader" hidden>실제 완료일</th><th>기준공수</th><th>일정 판정</th><th>결과물 리스트</th><th>관리</th></tr></thead><tbody id="taskRows"></tbody></table></div>
+          </section>
+        </section>
+        <section class="tab-pane monthly-data-section" id="monthPerf">
+          <div class="metric-grid">
+            <article class="metric"><span id="monthTotalLabel">요청 건수</span><strong id="monthTotal">0</strong><small id="monthDelta">전월 대비 +0%</small></article>
+            <article class="metric"><span id="monthDoneLabel">완료율</span><strong id="monthDone">0%</strong><small id="monthDoneText">완료 / 전체 요청</small></article>
+            <article class="metric warning"><span id="monthSlaLabel">일정 지연건</span><strong id="monthSla">0건</strong><small id="monthSlaText">정상 처리율 0%</small></article>
+            <article class="metric danger"><span id="monthUrgentLabel">긴급 비율</span><strong id="monthUrgent">0%</strong><small id="monthUrgentText">전체 대비 0%</small></article>
+          </div>
+          <section class="panel"><div class="panel-head"><div><h2>프로젝트 구성원 현황</h2><p>선택 프로젝트의 구성원별 참여 비율, 가동 공수, 업무 건수, 일정 지연건과 휴가 시간을 확인합니다.</p></div></div><div id="monthlyWorkerList" class="card-list"></div></section>
+          <section class="panel"><div class="panel-head"><div><h2>팀별 생산량 기준</h2><p>팀별 업무, 결과물, 완료율, 긴급/일정 지연 현황을 비교합니다.</p></div></div><div id="teamList" class="card-list"></div></section>
+          <section class="panel"><div class="panel-head"><div><h2>담당자별 처리 현황</h2><p>담당자별 업무, 결과물, 가동률, 인당 생산량, 일정 지연건을 확인합니다.</p></div></div><div id="ownerProductivityList" class="card-list"></div></section>
+        </section>
+      </section>
+
+      <section class="view" id="ganttView">
+        <section id="ganttProjectNotice" class="panel project-required-notice hidden"><strong>프로젝트를 선택하세요</strong><p>상단 프로젝트 선택 후 해당 프로젝트의 업무 일정을 확인할 수 있습니다.</p></section>
+        <section class="panel gantt-project-data">
+          <div class="panel-head">
+            <div><h2>업무 일정 간트</h2><p>접수일, 완료 예정일, 실제 완료일 기준으로 지난 일정과 예정 업무를 한눈에 확인합니다.</p></div>
+            <span id="ganttCount" class="count-pill">0건</span>
+          </div>
+          <div class="list-toolbar gantt-toolbar">
+            <label>검색<input id="ganttSearchInput" type="search" placeholder="업무명, 프로젝트, 담당자, 상태 검색" /></label>
+            <label>보기 방식<select id="ganttViewMode"><option value="period">기간순 보기</option><option value="type">작업 유형별 보기</option></select></label>
+            <label>작업 유형<select id="ganttTypeFilter"></select></label>
+            <label>기간 정렬<select id="ganttSortOrder"><option value="startAsc">접수일 빠른 순</option><option value="dueAsc">완료 예정일 빠른 순</option><option value="startDesc">최근 요청 순</option></select></label>
+          </div>
+          <div id="ganttTimeline" class="gantt-timeline"></div>
+        </section>
+      </section>
+
+      <section class="view" id="standardView">
+        <section class="panel">
+          <div class="panel-head"><div><h2>업무 등록</h2><p>로그인 계정에 배정된 프로젝트와 등록된 결과물만 선택해 업무를 추가합니다.</p></div><span id="taskAccountBadge" class="count-pill">계정 권한</span></div>
+          <form id="taskForm" class="form-grid">
+            <label>프로젝트<select id="taskProjectInput" name="project" required></select></label>
+            <label>담당자<select id="taskOwnerInput" name="owner" required></select></label>
+            <details class="task-assignee-recommendation wide-field">
+              <summary><span class="recommendation-closed">추천대상자 펼치기</span><span class="recommendation-open">추천대상자 접기</span></summary>
+              <div class="task-assignee-recommendation-head"><p>선택 프로젝트 · 완료 예정일 기준 · 미달: 연녹색 / 목표 도달: 회색 / 초과: 연붉은색 · 잔여 음수는 초과량입니다.</p><span id="taskRecommendationMonth" class="count-pill"></span></div>
+              <div id="taskAssigneeRecommendations" class="task-assignee-recommendation-list"></div>
+            </details>
+            <label class="wide-field">업무명<input id="taskTitleInput" name="title" placeholder="업무명을 입력하세요" required /></label>
+            <label class="wide-field">연결 업무 <span class="optional-label">선택</span><input id="taskRelatedTaskInput" name="relatedTaskId" list="taskRelatedTaskOptions" placeholder="업무번호 또는 업무명으로 검색" autocomplete="off" /><datalist id="taskRelatedTaskOptions"></datalist><small>선택 프로젝트의 기존 업무를 선행·연관 업무로 연결합니다.</small></label>
+            <label>접수일<input id="taskStartInput" name="start" type="date" required /></label>
+            <label>완료 예정일<input id="taskDueInput" name="due" type="date" required /></label>
+            <label>상태<select name="status"><option>요청</option><option>진행</option><option>완료</option><option>반려</option></select></label>
+            <label id="taskStageField">종합 단계 선택<select id="taskStageSelect" name="stagePreset"><option value="">단계를 선택하세요</option></select></label>
+            <label id="taskStageCustomField">종합 단계 직접 입력<input id="taskStageInput" name="stage" placeholder="목록에 없는 단계 입력" /></label>
+            <label id="taskStageDetailField" class="wide-field">단계 상세<input id="taskStageDetailInput" name="stageDetail" placeholder="예: 메인 화면 기획 1차 완료, 고객 검토 대기" /></label>
+            <label>요청 채널<select name="channel"><option>메일</option><option>메신저</option><option>Jira</option><option>전화</option><option>고객 포털</option></select></label>
+            <label>촬영 유형<select id="taskPhotoTypeInput" name="photoType"><option value="일반">일반 작업 (100%)</option><option value="화보컷">화보컷 (50%)</option><option value="비화보컷">비화보컷 (150%)</option></select></label>
+            <label id="taskEffortBufferLabel">개별 버퍼(%)<input id="taskEffortBufferInput" name="effortBufferPct" type="number" step="1" value="0" placeholder="예: 20 또는 -20" /></label>
+            <div class="checks"><label><input name="urgent" type="checkbox" /> 긴급</label><label><input name="revision" type="checkbox" /> 재작업</label></div>
+            <div class="deliverable-picker-wrap">
+              <div class="deliverable-picker-heading">
+                <div><strong>지정 결과물</strong><p>결과물명을 검색하면 일치하는 항목만 표시됩니다. 선택한 항목은 검색어를 바꿔도 유지됩니다.</p></div>
+                <button id="toggleAllTaskDeliverables" class="secondary" type="button">전체 결과물 보기</button>
+              </div>
+              <div class="bulk-deliverable-entry">
+                <label class="deliverable-search-label">결과물 검색·일괄 입력<input id="taskDeliverableSearchInput" type="search" placeholder="예: 메인배너 3, 공통띠배너 1" /></label>
+                <button id="applyTaskDeliverableBulk" class="secondary" type="button">일괄 적용</button>
+              </div>
+              <div id="taskDeliverableBulkResult" class="bulk-match-result" hidden></div>
+              <div id="taskDeliverableOptions" class="deliverable-picker"></div>
+              <div class="selected-deliverable-panel">
+                <strong>선택한 결과물</strong>
+                <div id="selectedTaskDeliverables" class="selected-deliverable-list"></div>
+              </div>
+            </div>
+            <div id="taskRegistrationSummary" class="summary-strip"></div>
+            <button class="primary" type="submit">업무 등록</button>
+          </form>
+        </section>
+      </section>
+
+      <section class="view" id="taskStatusView">
+        <div class="direction-tabbar" id="taskStatusDirectionTabs" role="tablist" aria-label="업무 현황 프로젝트 방향성"><button class="direction-tab active" data-task-direction="전체" type="button">전체</button><button class="direction-tab" data-task-direction="구축" type="button">구축</button><button class="direction-tab" data-task-direction="운영" type="button">운영</button><button class="direction-tab" data-task-direction="이커머스" type="button">이커머스</button></div>
+        <div class="metric-grid">
+          <article class="metric"><span>조회 업무</span><strong id="taskStatusTotal">0건</strong><small>현재 필터 기준</small></article>
+          <article class="metric"><span>진행 중</span><strong id="taskStatusActive">0건</strong><small>요청·진행·검수</small></article>
+          <article class="metric"><span>완료</span><strong id="taskStatusDone">0건</strong><small>실제 완료 처리</small></article>
+          <article class="metric warning"><span>일정 지연</span><strong id="taskStatusDelayed">0건</strong><small>우리측 귀책 기준</small></article>
+        </div>
+        <section class="panel">
+          <div class="panel-head"><div><h2>등록 업무 현황</h2><p>작업 월은 실제 완료일 기준입니다. 기타 목록에서 수정 버튼을 눌러 완료일을 입력하면 해당 월로 집계됩니다.</p><button id="missingCompletionFilter" class="secondary small" type="button">기타 · 완료일 미입력 모아보기</button></div><span id="registeredTaskCount" class="count-pill">0건</span></div>
+          <div class="list-toolbar operator-search"><label>업무 검색<input id="registeredTaskSearchInput" type="search" placeholder="업무번호, 업무명, 담당자, 결과물 검색" /></label></div>
+          <div class="table-wrap"><table><thead><tr><th>업무번호</th><th>업무</th><th>프로젝트</th><th>방향성</th><th>종합 단계</th><th>담당자</th><th>접수일</th><th>완료 예정일</th><th>실제 완료일</th><th>지연 귀책</th><th>공수 보정</th><th>환산공수</th><th>일정 판정</th><th>관리</th></tr></thead><tbody id="standardRows"></tbody></table></div>
+          <div class="history-pagination" aria-label="업무 현황 페이지"><button id="registeredTaskPrev" class="secondary icon-button" type="button" aria-label="이전 페이지" title="이전 페이지">‹</button><span id="registeredTaskPage">1 / 1</span><button id="registeredTaskNext" class="secondary icon-button" type="button" aria-label="다음 페이지" title="다음 페이지">›</button></div>
+        </section>
+      </section>
+
+      <section class="view" id="workResourceCreateView">
+        <section class="panel" id="workResourceCreatePanel">
+          <div class="panel-head">
+            <div><h2>업무 자료 등록</h2><p>프로젝트 공통사항, 공지사항, 작업 가이드와 참고 링크를 공유합니다.</p></div>
+            <span id="workResourcePermission" class="count-pill">프로젝트 권한</span>
+          </div>
+          <form id="workResourceForm" class="form-grid">
+            <label>프로젝트<select id="workResourceProject" name="project" required></select></label>
+            <label>분류<select id="workResourceCategory" name="category"><option>공지사항</option><option>공통사항</option><option>작업 가이드</option><option>참고 자료</option></select></label>
+            <label class="wide-field">제목<input id="workResourceTitle" name="title" placeholder="자료 제목을 입력하세요" required /></label>
+            <label class="wide-field">내용<textarea id="workResourceContent" name="content" rows="6" placeholder="작업 공통 기준이나 공지 내용을 입력하세요" required></textarea></label>
+            <label class="wide-field">참고 링크<input id="workResourceLink" name="link" type="url" placeholder="https://" /></label>
+            <label class="wide-field">첨부 이미지<input id="workResourceImages" name="images" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple /><small>한 건당 최대 20장, 이미지당 10MB</small></label>
+            <div class="checks"><label><input id="workResourcePinned" name="pinned" type="checkbox" /> 상단 고정</label></div>
+            <button class="primary" type="submit">업무 자료 등록</button>
+          </form>
+        </section>
+        <section class="panel">
+          <div class="panel-head">
+            <div><h2>등록 자료 관리</h2><p>접근 가능한 프로젝트에 등록한 자료를 수정하거나 삭제합니다.</p></div>
+            <span id="workResourceManageCount" class="count-pill">0건</span>
+          </div>
+          <div class="table-wrap"><table><thead><tr><th>프로젝트</th><th>분류</th><th>제목</th><th>작성자</th><th>수정일</th><th>관리</th></tr></thead><tbody id="workResourceManageRows"></tbody></table></div>
+        </section>
+      </section>
+
+      <section class="view" id="workResourcesView">
+        <section class="panel">
+          <div class="panel-head">
+            <div><h2>프로젝트 자료 확인</h2><p>계정에 담당 프로젝트로 지정된 자료만 확인합니다.</p></div>
+            <span id="workResourceCount" class="count-pill">0건</span>
+          </div>
+          <div class="list-toolbar work-resource-toolbar">
+            <label>프로젝트<select id="workResourceProjectFilter"></select></label>
+            <label>분류<select id="workResourceCategoryFilter"><option>전체</option><option>공지사항</option><option>공통사항</option><option>작업 가이드</option><option>참고 자료</option></select></label>
+            <label>검색<input id="workResourceSearch" type="search" placeholder="제목, 내용, 작성자 검색" /></label>
+          </div>
+          <div id="workResourceList" class="work-resource-list"></div>
+          <div class="history-pagination" aria-label="업무 자료 페이지">
+            <button id="workResourcePrev" class="secondary icon-button" type="button" aria-label="이전 페이지" title="이전 페이지">‹</button>
+            <span id="workResourcePage">1 / 1</span>
+            <button id="workResourceNext" class="secondary icon-button" type="button" aria-label="다음 페이지" title="다음 페이지">›</button>
+          </div>
+        </section>
+      </section>
+
+      <section class="view" id="resourceView">
+        <section id="resourceProjectNotice" class="panel project-required-notice hidden"><strong>프로젝트를 선택하세요</strong><p>상단 프로젝트 선택 후 해당 프로젝트의 인력과 가동 현황을 확인할 수 있습니다.</p></section>
+        <section class="panel resource-project-data"><div class="panel-head"><div><h2>프로젝트 투입 유효성</h2><p>투입 인원, 계약 인원, 기준공수, 일정 지연건, 계약 대비 인원 현황을 확인합니다.</p></div><div class="panel-actions"><button id="resourceCalculationButton" class="secondary metric-detail-open" data-detail-type="resourceCalculation" type="button">계산 방식 보기</button><button id="resourceRankingButton" class="secondary metric-detail-open" data-detail-type="projectPersonRanking" type="button">개인별 환산공수 순위</button></div></div><div id="resourceProjectList" class="card-list"></div></section>
+        <div class="metric-grid resource-utilization-grid resource-project-data"><button class="metric metric-action metric-detail-open" data-detail-type="capacityPeople" type="button"><span>가용 현황</span><strong id="capacityTotal">0H / 0H</strong><small>월 남은 공수 / 전체 공수 · 상세 보기</small></button><button class="metric metric-action metric-detail-open" data-detail-type="allPeople" type="button"><span>절대 기준</span><strong id="resourceProductivity">0H / 0%</strong><small>1일 평균 공수 / 7H 절대 가동률</small></button><article class="metric"><span>프로젝트 기준</span><strong id="resourceProjectStandard">가동 0% / 생산 0%</strong><small id="resourceProjectStandardNote">프로젝트 목표 생산율 0%</small></article><article class="metric"><span>회사 기준</span><strong id="resourceCompanyStandard">가동 0% / 생산 0%</strong><small id="resourceCompanyStandardNote">회사 목표 생산율 0%</small></article><button class="metric metric-action warning metric-detail-open" data-detail-type="idlePeople" type="button"><span>유휴 인력</span><strong id="idlePeople">0명 / 총 0명</strong><small>업무이력 총원 중 절대 가동률 40% 미만</small></button><button class="metric metric-action danger metric-detail-open" data-detail-type="riskPeople" type="button"><span>위험 인력</span><strong id="riskPeople">0명 / 총 0명</strong><small>업무이력 총원 중 절대 가동률 85% 이상</small></button></div>
+        <section class="panel resource-project-data resource-remaining-launcher">
+          <div class="panel-head">
+            <div><h2>월 잔여 공수</h2><p>상단에서 월을 선택한 뒤 실제 완료 업무를 기준으로 작업자별 잔여 공수를 확인합니다.</p></div>
+            <button id="resourceRemainingOpen" class="primary" type="button" disabled>월 잔여 공수 보기</button>
+          </div>
+          <p id="resourceRemainingLaunchNote" class="empty-text">조회할 월을 선택하세요.</p>
+        </section>
+        <section class="panel resource-project-data">
+          <div class="panel-head"><div><h2>100% 미만 가동 인원</h2><p>선택 프로젝트의 개인 가용공수 대비 환산공수가 낮은 인원부터 표시합니다.</p></div><span id="resourceUnderloadCount" class="count-pill">0명</span></div>
+          <div class="table-wrap"><table class="resource-underload-table"><thead><tr><th>순위</th><th>직원</th><th>팀 / 세부 그룹</th><th>업무</th><th>환산공수</th><th>개인 가용공수</th><th>절대 가동률</th><th>프로젝트 기준<br>가동 / 생산</th><th>회사 기준<br>가동 / 생산</th></tr></thead><tbody id="resourceUnderloadRows"></tbody></table></div>
+          <div class="pagination"><button id="resourceUnderloadPrev" class="secondary" type="button">이전</button><span id="resourceUnderloadPage">1 / 1</span><button id="resourceUnderloadNext" class="secondary" type="button">다음</button></div>
+        </section>
+      </section>
+
+      <section class="view" id="kpiView">
+        <div class="metric-grid">
+          <button class="metric metric-action metric-detail-open" data-detail-type="capacityPeople" type="button"><span>가용 현황</span><strong id="kpiCapacity">0H / 0H</strong><small>월 남은 공수 / 전체 공수 · 상세 보기</small></button>
+          <button class="metric metric-action metric-detail-open" data-detail-type="allPeople" type="button"><span>인당 평균 생산량</span><strong id="kpiProductivity">0H / 0%</strong><small>1일 평균 환산공수 / 생산 가용률 기준 · 상세 보기</small></button>
+          <button class="metric metric-action warning metric-detail-open" data-detail-type="idlePeople" type="button"><span>유휴 인력</span><strong id="kpiIdle">0명</strong><small>가동률 40% 미만 · 상세 보기</small></button>
+          <button class="metric metric-action danger metric-detail-open" data-detail-type="riskPeople" type="button"><span>위험 인력</span><strong id="kpiRisk">0명</strong><small>가동률 85% 이상 · 상세 보기</small></button>
+        </div>
+        <section class="panel">
+          <div class="panel-head"><div><h2>인당 생산량</h2><p>작업자별 프로젝트 생산량과 회사 전체 대비 비율입니다.</p></div></div>
+          <div id="kpiPeopleList" class="card-list"></div>
+        </section>
+        <section class="panel">
+          <div class="panel-head"><div><h2>프로젝트 KPI</h2><p>프로젝트별 업무 건수, 평균 생산량, 일정 지연건을 비교합니다.</p></div></div>
+          <div id="kpiProjectList" class="card-list"></div>
+        </section>
+      </section>
+
+      <section class="view" id="profitView">
+        <section class="panel"><div class="panel-head"><div><h2>수익성 & 계약정보</h2><p>계약 정보와 계약·투입 기준공수, 실제 수행공수를 비교합니다.</p></div></div><div id="profitList" class="profit-grid"></div></section>
+      </section>
+
+      <section class="view" id="healthView">
+        <div class="tabbar health-tabbar">
+          <button class="subtab active" data-target="healthOverview" type="button">고객사 위험도 / 프로젝트 건강도</button>
+          <button class="subtab" data-target="healthRisk" type="button">주요 위험 요인</button>
+        </div>
+        <section class="subtab-pane active" id="healthOverview"><section class="panel"><div class="panel-head"><div><h2>고객사 위험도 / 프로젝트 건강도</h2><p>긴급, 재작업, 승인 지연, 야간/주말 요청, 일정 지연건, 요청량 변동폭을 점수화합니다.</p></div></div><div id="healthList" class="health-grid"></div></section></section>
+        <section class="subtab-pane" id="healthRisk"><section class="panel"><div class="panel-head"><div><h2>주요 위험 요인</h2><p>점수에 영향을 준 승인 지연, 야간/주말 근무, 요청 변동을 관리 언어로 표시합니다.</p></div></div><div id="riskFactorList" class="card-list"></div></section></section>
+      </section>
+
+      <section class="view admin-view" id="projectConfigView">
+        <section class="panel">
+          <div class="panel-head"><div><h2>프로젝트 구성</h2><p>계약금과 계약 인원을 설정합니다. 실무·관리 투입 인원은 프로젝트 작업 세팅에서 지정합니다.</p></div><span class="count-pill">최상위 설정</span></div>
+          <div class="form-grid compact">
+            <label>고객사<input id="projectConfigClient" placeholder="고객사명" /></label>
+            <label>프로젝트 과업명<input id="projectConfigName" value="쇼핑몰 운영" /></label>
+            <label>방향성<select id="projectConfigDirection"><option>운영</option><option>구축</option><option>이커머스</option></select></label>
+            <label>확장 계약 기준 프로젝트<select id="projectConfigParent"><option value="">신규 단독 계약</option></select></label>
+            <label>계약 시작일<input id="projectConfigStartDate" type="date" value="2026-01-01" /></label>
+            <label>계약 종료일<input id="projectConfigEndDate" type="date" value="2026-12-31" /></label>
+            <label>월 계약금<input id="projectConfigMonthly" value="800" /></label>
+            <label>총 계약금<input id="projectConfigTotal" value="9600" /></label>
+            <label>계약 인원<input id="projectConfigPeople" type="number" min="0" value="3" /></label>
+            <label>1인 월 평단가<input id="projectConfigUnitPrice" type="number" min="0" value="266.67" readonly /></label>
+            <label>1인 월 원가(만원)<input id="projectConfigMonthlyPersonCost" type="number" min="0" step="10" value="0" placeholder="급여·간접비 포함" /></label>
+            <label>변경 사유<input id="projectConfigReason" placeholder="수정 시 입력" /></label>
+            <div class="form-actions"><button id="projectConfigAdd" class="primary" type="button">입력값 추가</button></div>
+          </div>
+        </section>
+        <section class="panel">
+          <div class="panel-head"><div><h2>진행 프로젝트</h2><p>진행 중인 프로젝트만 운영자 메뉴의 필터와 관제 지표에 반영됩니다.</p></div><span id="activeProjectCount" class="count-pill">0개</span></div>
+          <div class="table-wrap"><table class="project-config-table"><thead><tr><th>고객사</th><th>프로젝트 과업명</th><th>방향성</th><th>계약 기간</th><th>월 계약금</th><th>총 계약금</th><th>1인 월 평단가</th><th>1인 월 원가</th><th>계약 인원</th><th>실무 투입</th><th>관리 인원</th><th>총 투입</th><th>관리</th></tr></thead><tbody id="projectConfigRows"></tbody></table></div>
+        </section>
+        <section class="panel">
+          <div class="panel-head"><div><h2>종료 프로젝트</h2><p>종료된 프로젝트는 관제 대상에서 제외되며 필요할 때 진행 상태로 복구할 수 있습니다.</p></div><span id="closedProjectCount" class="count-pill">0개</span></div>
+          <div class="table-wrap"><table class="project-config-table"><thead><tr><th>고객사</th><th>프로젝트 과업명</th><th>방향성</th><th>종료월</th><th>종료 사유</th><th>관리</th></tr></thead><tbody id="closedProjectRows"></tbody></table></div>
+        </section>
+      </section>
+
+      <section class="view admin-view" id="companyGroupView">
+        <section class="panel">
+          <div class="panel-head"><div><h2>회사 업무 그룹</h2><p>팀명 아래 기본 업무 그룹과 세부 그룹을 구분하고, 포지션과 인원 등급을 함께 관리합니다.</p></div><span id="memberListCount" class="count-pill">0명</span></div>
+          <div class="admin-tabbar">
+            <button class="admin-tab active" data-admin-tab="teamMaster" type="button">팀 생성</button>
+            <button class="admin-tab" data-admin-tab="positionMaster" type="button">포지션 생성</button>
+            <button class="admin-tab" data-admin-tab="memberMaster" type="button">인원 등급 리스트</button>
+            <button class="admin-tab" data-admin-tab="memberAccountLinkMaster" type="button">계정 연결</button>
+            <button class="admin-tab" data-admin-tab="resignedMemberMaster" type="button">퇴사자 관리</button>
+          </div>
+          <section class="admin-pane active" id="teamMaster">
+            <div class="table-wrap"><table><thead><tr><th>팀명</th><th>기본 업무 그룹</th><th>세부 그룹</th><th>관리</th></tr></thead><tbody id="teamRows"></tbody></table></div>
+            <div class="form-grid compact inline-form">
+              <label>팀명<input id="teamNameInput" value="운영팀" /></label>
+              <label>기본 업무 그룹<input id="teamBaseGroupInput" value="운영" /></label>
+              <label>세부 그룹<input id="teamSubgroupInput" placeholder="쉼표로 구분해 선택 입력" /></label>
+              <div class="form-actions"><button id="teamAdd" class="primary" type="button">입력값 추가</button></div>
+            </div>
+          </section>
+          <section class="admin-pane" id="positionMaster">
+            <div class="table-wrap"><table><thead><tr><th>포지션명</th><th>관리</th></tr></thead><tbody id="positionRows"></tbody></table></div>
+            <div class="form-grid compact inline-form">
+              <label>포지션명<input id="positionNameInput" value="PM" /></label>
+              <div class="form-actions"><button id="positionAdd" class="primary" type="button">입력값 추가</button></div>
+            </div>
+          </section>
+          <section class="admin-pane" id="memberMaster">
+            <div class="list-toolbar">
+              <label>계정 검색<input id="memberSearchInput" type="search" placeholder="계정 ID, 직원명, 팀, 포지션, 등급 검색" /></label>
+            </div>
+            <div class="form-grid compact member-assign-panel member-editor-panel">
+              <label>처리 유형<select id="memberEditMode"><option value="add">신규 추가</option><option value="change">기존 변경</option></select></label>
+              <label>계정 / 직원 선택 <span class="optional-label">신규 추가 시 선택사항</span><select id="memberAccountAssign"></select></label>
+              <label>직원명<input id="memberNameInput" placeholder="직원명" /></label>
+              <label>팀<select id="memberAssignTeam"></select></label>
+              <label>세부 그룹<select id="memberAssignSubgroup"></select></label>
+              <label>포지션<select id="memberAssignPosition"></select></label>
+              <label>등급<select id="memberAssignGrade"></select></label>
+              <div class="form-actions"><button id="memberAccountApply" class="primary" type="button">직원 정보 추가</button></div>
+              <p id="memberEditorMessage" class="form-hint wide-field">계정에 직원 정보와 조직 정보를 연결합니다.</p>
+            </div>
+            <div class="table-wrap"><table><thead><tr><th>계정 ID</th><th>직원명</th><th>팀</th><th>세부 그룹</th><th>포지션</th><th>등급</th><th>근무 형태</th><th>관리</th></tr></thead><tbody id="memberRows"></tbody></table></div>
+          </section>
+          <section class="admin-pane" id="memberAccountLinkMaster">
+            <div class="panel-head compact-head"><div><h3>미연결 직원 계정 연결</h3><p>Excel 또는 직접 입력으로 먼저 생성한 직원과 나중에 만든 로그인 계정을 연결합니다.</p></div><span id="unlinkedMemberCount" class="count-pill">0명</span></div>
+            <div class="form-grid compact member-link-panel">
+              <label>미연결 직원<select id="memberLinkEmployee"></select></label>
+              <label>미연결 계정<select id="memberLinkAccount"></select></label>
+              <div class="form-actions"><button id="memberLinkApply" class="primary" type="button">직원과 계정 연결</button></div>
+              <p id="memberLinkMessage" class="form-hint wide-field">직원명과 계정 프로필을 연결하면 해당 계정에서 배정 업무를 확인할 수 있습니다.</p>
+            </div>
+          </section>
+          <section class="admin-pane" id="resignedMemberMaster">
+            <div class="list-toolbar resigned-member-filters">
+              <label>팀<select id="resignedTeamFilter"></select></label>
+              <label>퇴사일 시작<input id="resignedFromFilter" type="date" /></label>
+              <label>퇴사일 종료<input id="resignedToFilter" type="date" /></label>
+              <div class="form-actions"><button id="resetResignedFilters" class="secondary" type="button">조건 초기화</button></div>
+            </div>
+            <div class="panel-head compact-head">
+              <div><h3>퇴사자 인원 정보</h3><p>삭제하지 않고 과거 업무와 프로젝트 담당 이력을 유지합니다.</p></div>
+              <span id="resignedMemberCount" class="count-pill">0명</span>
+            </div>
+            <div class="table-wrap"><table><thead><tr><th>직원명</th><th>팀</th><th>세부 그룹</th><th>포지션</th><th>등급</th><th>퇴사일</th><th>퇴사 사유</th><th>관리</th></tr></thead><tbody id="resignedMemberRows"></tbody></table></div>
+            <div class="history-pagination" aria-label="퇴사자 목록 페이지">
+              <button id="resignedMemberPrev" class="secondary icon-button" type="button" aria-label="이전 페이지" title="이전 페이지">‹</button>
+              <span id="resignedMemberPageStatus">1 / 1</span>
+              <button id="resignedMemberNext" class="secondary icon-button" type="button" aria-label="다음 페이지" title="다음 페이지">›</button>
+            </div>
+          </section>
+        </section>
+      </section>
+
+      <section class="view admin-view" id="accountSettingView">
+        <section class="panel">
+          <div class="panel-head"><div><h2>계정 생성 및 권한 설정</h2><p>로그인 계정과 접근 권한만 생성합니다. 직원·팀 정보는 회사 업무 그룹에서 연결합니다.</p></div><span id="accountCount" class="count-pill">0개</span></div>
+          <div class="form-grid compact account-minimal-form">
+            <label>계정명(ID)<input id="accountIdInput" placeholder="login.id" /></label>
+            <label>권한<select id="accountRoleInput"><option value="worker">실무자 작업함만</option><option value="operator_no_profit">운영자 메뉴(수익성 제외)</option><option value="operator_output_admin">운영자 메뉴 + 업무 템플릿</option><option value="admin">관리자 메뉴 포함 전체</option><option value="portal">고객 포털만</option><option value="operator_all">운영자 메뉴 전체</option></select></label>
+            <div class="form-actions"><button id="accountAdd" class="primary" type="button">계정 생성</button></div>
+            <p class="form-hint">임시 비밀번호는 생성 완료 후 한 번 표시됩니다. 프로젝트 접근은 회사 업무 그룹의 팀 정보와 프로젝트 작업 세팅의 팀 매칭으로 자동 결정됩니다.</p>
+            <p id="accountCreateResult" class="account-create-result wide-field" hidden></p>
+          </div>
+        </section>
+        <section class="panel">
+          <div class="panel-head"><div><h2>계정 리스트</h2><p>계정 권한과 직원 정보 연결 여부를 확인합니다.</p></div></div>
+          <div class="list-toolbar"><label>계정 검색<input id="accountSearchInput" type="search" placeholder="계정명 검색" /></label></div>
+          <div class="table-wrap"><table><thead><tr><th>계정명</th><th>권한</th><th>직원 정보</th><th>관리</th></tr></thead><tbody id="accountRows"></tbody></table></div>
+        </section>
+      </section>
+
+      <section class="view admin-view" id="excelUploadView">
+        <div class="tabbar excel-upload-tabbar">
+          <button class="tab excel-upload-tab active" data-excel-tab="excelUploadInputPane" type="button">파일 업로드</button>
+          <button class="tab excel-upload-tab" data-excel-tab="excelUploadResultPane" type="button">결과 확인</button>
+          <button class="tab excel-upload-tab" data-excel-tab="excelUploadRowsPane" type="button">업로드 결과</button>
+          <button class="tab excel-upload-tab" data-excel-tab="excelUploadErrorPane" type="button">형식 오류</button>
+          <button class="tab excel-upload-tab" data-excel-tab="excelUploadHistoryPane" type="button">업로드 이력</button>
+        </div>
+        <div class="excel-upload-pane active" id="excelUploadInputPane">
+          <section class="panel">
+            <div class="panel-head"><div><h2>Excel 데이터 업로드</h2><p>업무 원장과 결과물 상세만 저장합니다. 프로젝트·작업자·팀·세부그룹은 관리자 기준정보와 일치해야 하며 업로드로 생성하거나 변경하지 않습니다.</p></div><a class="secondary button-link" href="./업무데이터_업로드_템플릿.xlsx" download>템플릿 다운로드</a></div>
+            <div class="upload-dropzone">
+              <label>업로드 Excel 파일<input id="dbExcelFile" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" /></label>
+              <button id="dbExcelUpload" class="primary" type="button">파일 분석</button>
+            </div>
+            <div class="note-box">
+              <h3>중복 제거 기준</h3>
+              <p>업무번호+보조번호 조합을 고유 키로 사용합니다. 단, 수기 추가용 보조번호 20은 같은 업무번호로 여러 번 입력할 수 있으며 결과물 수량과 기준 공수가 합산됩니다.</p>
+              <p>보조번호 20의 산출물에만 입력 배수를 적용합니다. 같은 업무의 다른 보조번호는 1배입니다. 20번 재업로드는 추가 수량으로 합산되며 기존 배수 수정은 업무 수정 화면에서 진행합니다. <strong>1.2=120%</strong>, <strong>1.5=150%</strong>, <strong>2.0=200%</strong> 공수입니다.</p>
+              <p>결과물 분류에는 업무 템플릿에 등록된 명칭(Key Name)을 입력하고, Count에는 해당 결과물의 수량을 숫자로 입력합니다.</p>
+              <p>결과물은 완전 일치 → 핵심 명칭 일치(규격 숫자·배너 접미어 보정) → 제한적 유사 일치 순서로 판정합니다.</p>
+            </div>
+          </section>
+        </div>
+        <div class="excel-upload-pane" id="excelUploadResultPane">
+          <section class="panel">
+            <div class="panel-head">
+              <div><h2>결과물 Count 취합</h2><p>마지막 업로드 파일 기준이며 등록된 결과물 전체를 표시합니다.</p></div>
+              <div class="panel-actions"><span id="excelUploadCountTotal" class="count-pill">0개</span><button id="downloadExcelCountSummary" class="secondary download-button" type="button">⇩ Excel 다운로드</button></div>
+            </div>
+            <div class="table-wrap"><table><thead><tr><th>프로젝트</th><th>업무 템플릿값</th><th>업로드 Key Name</th><th>매칭 기준</th><th>Count</th><th>환산공수</th></tr></thead><tbody id="excelUploadCountRows"><tr><td colspan="6">업로드 결과가 없습니다.</td></tr></tbody></table></div>
+          </section>
+        </div>
+        <div class="excel-upload-pane" id="excelUploadRowsPane">
+          <section class="panel">
+            <div class="panel-head"><div><h2>최근 업로드 결과</h2><p id="excelUploadMessage">업로드된 파일이 없습니다.</p></div><span id="excelUploadFileName" class="count-pill">대기</span></div>
+            <div class="operator-detail-summary">
+              <div class="mini"><b id="excelUploadRead">0건</b><span>읽은 행</span></div>
+              <div class="mini"><b id="excelUploadAdded">0건</b><span>신규 추가</span></div>
+              <div class="mini"><b id="excelUploadUpdated">0건</b><span>기존 갱신</span></div>
+              <div class="mini"><b id="excelUploadDuplicate">0건</b><span>중복 제외</span></div>
+              <div class="mini"><b id="excelUploadError">0건</b><span>형식 오류</span></div>
+            </div>
+            <div id="excelPreviewActions" class="form-actions standalone" hidden>
+              <button id="applyExcelPreview" class="primary" type="button">분석 결과 DB 반영</button>
+              <button id="cancelExcelPreview" class="secondary" type="button">분석 취소</button>
+            </div>
+            <div class="table-wrap"><table><thead><tr><th>행</th><th>업무번호</th><th>보조번호</th><th>업무명</th><th>처리 결과</th><th>사유</th></tr></thead><tbody id="excelUploadResultRows"><tr><td colspan="6">업로드 결과가 없습니다.</td></tr></tbody></table></div>
+            <div class="history-pagination" aria-label="업로드 결과 페이지">
+              <button id="excelResultPrevPage" class="secondary icon-button excel-result-page" data-direction="-1" type="button" aria-label="이전 페이지" title="이전 페이지">‹</button>
+              <span id="excelResultPageStatus">1 / 1 · 총 0건</span>
+              <button id="excelResultNextPage" class="secondary icon-button excel-result-page" data-direction="1" type="button" aria-label="다음 페이지" title="다음 페이지">›</button>
+            </div>
+          </section>
+        </div>
+        <div class="excel-upload-pane" id="excelUploadErrorPane">
+          <section class="panel">
+            <div class="panel-head"><div><h2>형식 오류 목록</h2><p>최근 업로드 결과에서 수정이 필요한 행만 표시합니다.</p></div><span id="excelErrorCount" class="count-pill">0건</span></div>
+            <div class="table-wrap"><table><thead><tr><th>행</th><th>업무번호</th><th>보조번호</th><th>업무명</th><th>처리 결과</th><th>오류 사유</th></tr></thead><tbody id="excelUploadErrorRows"><tr><td colspan="6">형식 오류가 없습니다.</td></tr></tbody></table></div>
+            <div class="history-pagination" aria-label="형식 오류 페이지">
+              <button id="excelErrorPrevPage" class="secondary icon-button excel-error-page" data-direction="-1" type="button" aria-label="이전 페이지" title="이전 페이지">‹</button>
+              <span id="excelErrorPageStatus">1 / 1 · 총 0건</span>
+              <button id="excelErrorNextPage" class="secondary icon-button excel-error-page" data-direction="1" type="button" aria-label="다음 페이지" title="다음 페이지">›</button>
+            </div>
+          </section>
+        </div>
+        <div class="excel-upload-pane" id="excelUploadHistoryPane">
+          <section class="panel">
+            <div class="panel-head"><div><h2>업로드 배치 이력</h2><p>파일별 반영 결과를 확인하고 가장 최근 정상 배치를 되돌릴 수 있습니다.</p></div><span id="excelBatchCount" class="count-pill">0건</span></div>
+            <div class="table-wrap"><table><thead><tr><th>업로드 일시</th><th>파일명</th><th>처리자</th><th>읽은 행</th><th>신규</th><th>갱신</th><th>중복</th><th>오류</th><th>상태</th><th>관리</th></tr></thead><tbody id="excelBatchRows"><tr><td colspan="10">업로드 이력이 없습니다.</td></tr></tbody></table></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="view admin-view" id="projectSettingView">
+        <section class="panel">
+          <div class="panel-head"><div><h2>프로젝트 리스트</h2><p>진행 프로젝트별 배정 팀과 개별 투입 인원을 확인하고 수정 팝업에서 관리합니다.</p></div><span id="projectSettingCount" class="count-pill">0개</span></div>
+          <div class="table-wrap"><table><thead><tr><th>진행 프로젝트</th><th>진행 팀</th><th>개별 추가 인원</th><th>관리 인원</th><th>총 투입</th><th>방향성</th><th>절대 기준</th><th>적용월</th><th>관리</th></tr></thead><tbody id="projectSettingRows"></tbody></table></div>
+        </section>
+        <section class="panel">
+          <div class="panel-head"><div><h2>프로젝트 투입 구성 변경 이력</h2><p>진행 팀, 개별 인원, 적용월 변경 이력을 확인합니다.</p></div></div>
+          <div class="list-toolbar">
+            <label>프로젝트 선택<select id="teamHistoryProjectFilter"></select></label>
+          </div>
+          <div class="table-wrap"><table><thead><tr><th>변경일</th><th>프로젝트</th><th>구분</th><th>변경 항목</th><th>이전 값</th><th>변경 값</th><th>변경 사유</th></tr></thead><tbody id="projectTeamHistoryRows"></tbody></table></div>
+        </section>
+      </section>
+
+      <section class="view admin-view" id="deliverableSettingView">
+        <section class="panel">
+          <div class="panel-head"><div><h2>업무 템플릿</h2><p>관리할 프로젝트를 먼저 선택한 뒤 결과물 유형과 기준공수, 평균 작업일, 환산 기준을 설정합니다.</p></div></div>
+          <div class="deliverable-project-gate">
+            <label>프로젝트 선택<select id="deliverableProjectSelect"><option value="">프로젝트를 선택하세요</option></select></label>
+            <p>진행 중인 프로젝트를 선택하면 해당 프로젝트의 템플릿 입력과 기존 목록이 표시됩니다.</p>
+          </div>
+          <div id="deliverableProjectContents" class="deliverable-project-content hidden">
+            <div class="deliverable-content-head">
+              <div><strong id="deliverableSelectedProjectTitle">선택 프로젝트</strong><span>업무 템플릿 설정</span></div>
+              <div class="panel-actions"><a class="secondary button-link" href="./업무템플릿_업로드_템플릿.xlsx" download>업로드 템플릿</a><button id="downloadDeliverableSettings" class="secondary download-button" type="button">⇩ Excel 다운로드</button></div>
+            </div>
+            <div class="template-buffer-setting">
+              <div><strong>리소스 목표 생산율</strong><p>선택 프로젝트의 가동률과 인당 생산율에 적용합니다. 120을 입력하면 기본 가용공수의 120%를 목표 100%로 계산합니다. 회사 목표도 같은 방식입니다. 기존 버퍼 -50%는 목표 150%, 15%는 목표 85%로 전환됩니다.</p></div>
+              <label>프로젝트 목표 생산율(%)<input id="templateProjectBufferInput" type="number" value="100" min="0.01" step="0.01" /></label>
+              <label>회사 목표 생산율(%)<input id="templateCompanyBufferInput" type="number" value="100" min="0.01" step="0.01" /></label>
+              <button id="saveTemplateBuffers" class="primary" type="button">목표 저장</button>
+            </div>
+            <div id="templateBufferSummary" class="summary-strip"></div>
+            <div class="upload-dropzone deliverable-upload-zone">
+              <label>업무 템플릿 Excel<input id="deliverableExcelFile" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" /></label>
+              <label class="replace-confirm"><input id="deliverableReplaceConfirm" type="checkbox" /> 기존 설정 전체 교체 확인</label>
+              <button id="deliverableExcelUpload" class="danger-button" type="button">Excel 전체 교체</button>
+            </div>
+            <div id="deliverableExcelMessage" class="note-box"><strong>전체 교체 업로드</strong><p>파일 전체가 정상일 때만 기존 결과물 설정을 삭제하고 새 파일 내용으로 교체합니다.</p></div>
+            <div class="conversion-box">
+              <label>결과물 명칭<input id="deliverableNameInput" value="컨셉배너" /></label>
+              <label>기준 공수<input id="deliverableHoursInput" value="1.5" /></label>
+              <label>평균 작업일(영업일)<input id="deliverableSlaDaysInput" type="number" min="0" step="1" placeholder="예: 1" /></label>
+              <label>환산 기준 결과물<select id="conversionTargetSelect"></select></label>
+            </div>
+            <div id="deliverableConversionResult" class="summary-strip"></div>
+            <div class="form-actions standalone"><button id="deliverableAdd" class="primary" type="button">입력값 추가</button><button id="deliverableBulkConvert" class="secondary" type="button">환산 기준 일괄 변경</button></div>
+            <div class="table-wrap"><table><thead><tr><th>프로젝트</th><th>결과물 명칭</th><th>기준공수</th><th>평균 작업일</th><th>환산공수 기준</th><th>1 W/D 환산 결과</th><th>관리</th></tr></thead><tbody id="deliverableRows"></tbody></table></div>
+          </div>
+        </section>
+        <section id="deliverableSlaPanel" class="panel hidden">
+          <div class="panel-head"><div><h2>결과물별 일정 기준</h2><p>요청일 대비 완료 예정일이 평균 작업일보다 짧으면 요청자 긴급요청으로, 실제 완료가 기준을 넘고 귀책이 우리측이면 작업자 일정 지연으로 판정합니다.</p></div><span id="slaRuleCount" class="count-pill">0개 설정</span></div>
+          <div class="form-grid compact">
+            <label>선택 프로젝트<select id="slaRuleProject" disabled></select></label>
+            <label>결과물<select id="slaRuleDeliverable"></select></label>
+            <label>평균 작업일(영업일)<input id="slaRuleDays" type="number" min="0" step="1" value="1" /></label>
+            <div class="form-actions"><button id="slaRuleSave" class="primary" type="button">일정 기준 저장</button></div>
+          </div>
+          <div class="table-wrap"><table><thead><tr><th>프로젝트</th><th>결과물</th><th>평균 작업일</th><th>적용 기준</th><th>관리</th></tr></thead><tbody id="slaRuleRows"></tbody></table></div>
+        </section>
+      </section>
+
+      <section class="view admin-view" id="employeeReviewManagementView"></section>
+      <section class="view admin-view" id="employeeReviewView">
+        <div class="metric-grid five">
+          <article class="metric"><span>평가 대상</span><strong id="reviewPeopleCount">0명</strong><small>퇴사 제외 · 누적 데이터 기준</small></article>
+          <article class="metric"><span>평균 종합점수</span><strong id="reviewAverageScore">0점</strong><small>시스템 산정 참고 점수</small></article>
+          <article class="metric warning"><span>핵심/고성과</span><strong id="reviewTopPeople">0명</strong><small>S/A 등급 인원</small></article>
+          <article class="metric danger"><span>관리 필요</span><strong id="reviewRiskPeople">0명</strong><small>C/D 등급 인원</small></article>
+          <article class="metric"><span>평가 보류</span><strong id="reviewHoldPeople">0명</strong><small>데이터 부족 또는 특수성 큼</small></article>
+        </div>
+        <section class="panel">
+          <div class="panel-head">
+            <div><h2>직원별 평가표</h2><p>순수점수는 최대 85점이며, 120% 초과 보너스와 중복 프로젝트 가산점으로 최대 120점까지 확인합니다.</p></div>
+            <a class="secondary button-link" href="./직원평가_기준안.txt" download>평가기준 TXT</a>
+          </div>
+          <div class="form-grid compact review-period-filter-grid">
+            <label>프로젝트<select id="reviewProjectFilter"></select></label>
+            <label>연도<select id="reviewYearFilter"></select></label>
+            <label>월<select id="reviewMonthFilter"></select></label>
+          </div>
+          <div class="review-search-row">
+            <label>직원 검색<input id="reviewSearchInput" type="search" placeholder="직원명, 팀, 세부그룹, 포지션 검색" /></label>
+          </div>
+          <div class="table-wrap review-table-wrap"><table class="review-table"><thead><tr><th>직원</th><th>소속</th><th>종합</th><th>등급</th><th>생산성</th><th>절대 가동률</th><th>프로젝트 내부 평가</th><th>회사 전체 평가</th><th>안정성</th><th>품질</th><th>운영평가</th><th>중복 프로젝트 +@</th><th>주요 근거</th></tr></thead><tbody id="employeeReviewRows"></tbody></table></div>
+        </section>
+        <section class="panel">
+          <div class="panel-head"><div><h2>평가 항목별 기준</h2><p>점수는 인사 확정값이 아니라 관리자 보정 전 참고 지표입니다.</p></div></div>
+          <div id="reviewCriteriaList" class="card-list"></div>
+        </section>
+      </section>
+
+      <section class="view" id="staffingView">
+        <section class="panel">
+          <div class="panel-head"><div><h2>채용·재배치 시뮬레이션</h2><p>신규 프로젝트 투입 예상과 현재 유휴 공수를 비교합니다.</p></div></div>
+          <div class="simulator">
+            <label>신규 프로젝트 유형<select id="simType"><option value="operation">운영</option><option value="commerce">이커머스</option><option value="build">구축</option></select></label>
+            <label>예상 업무 수<input id="simTasks" type="number" value="18" min="1" /></label>
+            <label>업무당 기준공수<input id="simHours" type="number" value="4" min="0.5" step="0.5" /></label>
+            <button class="primary" id="runSim" type="button">시뮬레이션</button>
+          </div>
+        </section>
+        <section class="panel"><div id="simulationResult" class="simulation-result"></div></section>
+      </section>
+
+      <section class="view" id="myWorkView">
+        <div class="direction-tabbar" id="myWorkDirectionTabs" role="tablist" aria-label="담당자 업무 프로젝트 방향성"><button class="direction-tab active" data-my-work-direction="전체" type="button">전체</button><button class="direction-tab" data-my-work-direction="구축" type="button">구축</button><button class="direction-tab" data-my-work-direction="운영" type="button">운영</button><button class="direction-tab" data-my-work-direction="이커머스" type="button">이커머스</button></div>
+        <div class="metric-grid">
+          <article class="metric"><span>배정 업무</span><strong id="myWorkTotal">0건</strong><small>선택 월 기준</small></article>
+          <article class="metric"><span>미처리</span><strong id="myWorkWaiting">0건</strong><small>착수 전 업무</small></article>
+          <article class="metric warning"><span>처리중·보류</span><strong id="myWorkActive">0건</strong><small>현재 처리 대상</small></article>
+          <article class="metric danger"><span>기한 경과</span><strong id="myWorkOverdue">0건</strong><small>완료되지 않은 지연 업무</small></article>
+        </div>
+        <section class="panel">
+          <div class="panel-head">
+            <div><h2>내게 배정된 업무</h2><p>업무별 개인 처리 상태와 완료 여부를 관리합니다.</p></div>
+            <span id="myWorkCount" class="count-pill">0건</span>
+          </div>
+          <div class="list-toolbar my-work-toolbar">
+            <label id="myWorkMemberLabel" class="hidden">담당자<select id="myWorkMemberFilter"></select></label>
+            <label>처리 상태<select id="myWorkStatusFilter"><option>전체</option><option>미처리</option><option>처리중</option><option>보류</option><option>완료</option></select></label>
+            <label>검색<input id="myWorkSearchInput" type="search" placeholder="업무명, 프로젝트, 종합 단계, 결과물 검색" /></label>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>업무번호</th><th>프로젝트</th><th>방향성</th><th>업무명</th><th>종합 단계</th><th>담당 결과물</th><th>배정공수</th><th>완료 예정일</th><th>개인 상태</th><th>변경일</th><th>관리</th></tr></thead>
+              <tbody id="myWorkRows"></tbody>
+            </table>
+          </div>
+          <div class="pagination">
+            <button id="myWorkPrev" class="secondary small" type="button">이전</button>
+            <span id="myWorkPage">1 / 1</span>
+            <button id="myWorkNext" class="secondary small" type="button">다음</button>
+          </div>
+        </section>
+      </section>
+
+      <section class="view admin-view" id="systemSettingView">
+        <section class="panel system-setting-panel">
+          <div class="panel-head"><div><h2>시스템 브랜딩</h2><p>로그인 화면과 좌측 메뉴 상단에 표시할 회사명과 로고를 설정합니다.</p></div><span class="count-pill">공통 설정</span></div>
+          <div class="system-brand-layout">
+            <div class="form-grid compact">
+              <label>회사명<input id="systemCompanyName" maxlength="40" placeholder="회사명" /></label>
+              <label>서비스 설명<input id="systemBrandSubtitle" maxlength="60" placeholder="프로젝트 운영 관제" /></label>
+              <label class="wide-field">회사 로고<input id="systemLogoInput" type="file" accept="image/png,image/jpeg,image/webp" /></label>
+              <div class="checks wide-field"><label><input id="systemLogoRemove" type="checkbox" /> 현재 로고 제거</label></div>
+              <div class="form-actions wide-field"><button id="saveSystemBrand" class="primary" type="button">시스템 설정 저장</button></div>
+              <p id="systemBrandMessage" class="form-hint wide-field">로고는 500KB 이하 PNG, JPG, WebP 파일을 사용합니다.</p>
+            </div>
+            <div class="brand-preview"><span>미리보기</span><div class="brand-preview-content"><div class="brand-mark" id="systemBrandPreviewMark"><span id="systemBrandPreviewText" class="brand-mark-text">OPS</span><img id="systemBrandPreviewLogo" class="brand-logo" alt="로고 미리보기" hidden /></div><div><strong id="systemBrandPreviewName">회사명</strong><small id="systemBrandPreviewSubtitle">프로젝트 운영 관제</small></div></div></div>
+          </div>
+        </section>
+        <section class="panel system-setting-panel">
+          <div class="panel-head"><div><h2>월별 근무일(W/D)</h2><p>창립기념일과 회사 휴무일을 반영한 월별 근무일을 직접 입력하거나 외부 캘린더 API에서 동기화합니다.</p></div><span class="count-pill">공통 설정</span></div>
+          <div class="form-grid compact work-calendar-settings">
+            <label>설정 방식<select id="workCalendarMode"><option value="manual">수동 방식</option><option value="api">자동 방식(API)</option></select></label>
+            <label>대상 월<input id="workCalendarMonth" type="month" /></label>
+            <label>월 W/D<input id="workCalendarDays" type="number" min="0" max="31" step="0.5" placeholder="예: 20" /></label>
+            <div class="form-actions"><button id="saveManualWorkCalendar" class="primary" type="button">월 W/D 저장</button></div>
+            <label class="wide-field work-calendar-api-field">API URL<input id="workCalendarApiUrl" type="url" placeholder="https://example.com/api/working-days" /></label>
+            <div class="form-actions work-calendar-api-field"><button id="syncWorkCalendarApi" class="secondary" type="button">API 연결 및 동기화</button></div>
+            <p class="form-hint wide-field work-calendar-api-field">지원 응답: <code>{"2026-08": 20}</code> 또는 <code>{"months":[{"month":"2026-08","workingDays":20}]}</code>. 브라우저 호출을 허용하는 CORS 설정이 필요합니다.</p>
+            <p id="workCalendarMessage" class="form-hint wide-field">월별 설정이 없으면 주말과 기본 공휴일을 제외해 자동 계산합니다.</p>
+          </div>
+          <div class="table-wrap"><table><thead><tr><th>월</th><th>설정 W/D</th><th>기본 계산 W/D</th><th>출처</th><th>관리</th></tr></thead><tbody id="workCalendarRows"></tbody></table></div>
+        </section>
+      </section>
+
+      <section class="view" id="portalView">
+        <section class="portal-hero"><div><p class="eyebrow">고객 포털</p><h2 id="portalClient">전체 고객사</h2><p>요청 진행 상태, 월간 처리 현황, 일정 정상률, 결과물/검수 현황을 고객에게 보여주는 외부 화면입니다.</p></div><span class="status-pill good">공유 가능</span></section>
+        <div class="portal-tabbar" role="tablist" aria-label="고객 포털 조회 메뉴">
+          <button class="portal-tab active" data-portal-tab="portalOverviewPane" type="button">운영 요약</button>
+          <button class="portal-tab" data-portal-tab="portalOutputPane" type="button">결과물 유형별 작업 현황</button>
+          <button class="portal-tab" data-portal-tab="portalWbsPane" type="button">WBS 간트</button>
+        </div>
+        <section id="portalOverviewPane" class="portal-pane active">
+          <section class="panel">
+            <div class="panel-head"><div><h2>포털 공개 영역</h2><p>고객에게 공개할 운영 지표를 확인합니다.</p></div></div>
+            <div class="portal-public-list">
+              <div><span>요청 진행 상태</span><strong id="portalProgress">0%</strong></div>
+              <div><span>월간 처리 현황</span><strong id="portalRequestVolume">0건</strong></div>
+              <div><span>일정 정상률</span><strong id="portalSla">0%</strong></div>
+              <div><span>요청량 분석</span><strong id="portalDelta">0%</strong></div>
+              <div><span>긴급 요청 비율</span><strong id="portalUrgent">0%</strong></div>
+              <div><span>결과물/검수 현황</span><strong id="portalOutputs">0건</strong></div>
+            </div>
+          </section>
+          <section class="panel"><div class="panel-head"><div><h2>요청/결과물 현황</h2><p>고객에게 공개 가능한 상태만 표시합니다.</p></div></div><div class="table-wrap"><table><thead><tr><th>요청명</th><th>프로젝트</th><th>상태</th><th>완료 예정/완료일</th><th>결과물</th></tr></thead><tbody id="portalRows"></tbody></table></div></section>
+        </section>
+        <section id="portalOutputPane" class="portal-pane">
+          <div class="metric-grid">
+            <article class="metric"><span>결과물 총 작업량</span><strong id="portalOutputQuantity">0건</strong><small>결과물 Count 합계</small></article>
+            <article class="metric"><span>결과물 유형</span><strong id="portalOutputTypes">0종</strong><small>선택 조건 내 작업 유형</small></article>
+            <article class="metric warning"><span>긴급 요청 업무</span><strong id="portalUrgentTasks">0건</strong><small>전체 요청 업무 기준</small></article>
+            <article class="metric danger"><span>고객 긴급 요청 비율</span><strong id="portalOutputUrgentRate">0%</strong><small>긴급 요청 업무 / 전체 업무</small></article>
+          </div>
+          <section class="panel">
+            <div class="panel-head"><div><h2>결과물 유형별 작업 건수 종합</h2><p>결과물별 작업 수량과 해당 유형이 포함된 업무의 긴급 요청 비율을 확인합니다.</p></div><span id="portalOutputTypeCount" class="count-pill">0종</span></div>
+            <div class="table-wrap"><table class="portal-output-table"><thead><tr><th>결과물 유형</th><th>포함 업무</th><th>작업 수량</th><th>결과물 비중</th><th>긴급 요청 업무</th><th>유형별 긴급 비율</th><th>환산공수</th></tr></thead><tbody id="portalOutputRows"></tbody></table></div>
+          </section>
+        </section>
+        <section id="portalWbsPane" class="portal-pane">
+          <section class="panel">
+            <div class="panel-head"><div><h2>프로젝트 WBS 일정</h2><p>프로젝트, 작업 유형, 개별 업무 순서로 계획과 완료 일정을 확인합니다.</p></div><span id="portalWbsCount" class="count-pill">0건</span></div>
+            <div class="list-toolbar gantt-toolbar portal-wbs-toolbar">
+              <label>보기 방식<select id="portalWbsViewMode"><option value="period">기간순 보기</option><option value="type">작업 유형별 보기</option></select></label>
+              <label>작업 유형<select id="portalWbsTypeFilter"><option value="전체">전체</option></select></label>
+              <label>기간 정렬<select id="portalWbsSortOrder"><option value="startAsc">접수일 빠른 순</option><option value="dueAsc">완료 예정일 빠른 순</option><option value="startDesc">최근 요청 순</option></select></label>
+            </div>
+            <div class="gantt-legend" aria-label="간트 상태 범례"><span class="done">완료</span><span class="planned">예정</span><span class="past">경과</span><span class="late">일정 지연</span></div>
+            <div id="portalWbsTimeline" class="gantt-timeline portal-wbs-timeline"></div>
+          </section>
+        </section>
+      </section>
+    </main>
+    <div class="modal-backdrop" id="memberModal" aria-hidden="true">
+      <section class="modal member-edit-dialog" role="dialog" aria-modal="true" aria-labelledby="memberModalTitle">
+        <div class="modal-head">
+          <div>
+            <h2 id="memberModalTitle">인원 정보 수정</h2>
+            <p>직원명, 팀, 포지션, 등급은 팝업에서만 수정합니다.</p>
+          </div>
+          <button class="secondary small member-modal-close" type="button">닫기</button>
+        </div>
+        <div class="member-edit-body">
+          <fieldset class="member-edit-section">
+            <legend>기본 정보</legend>
+            <div class="member-edit-grid member-edit-grid-basic">
+              <label>직원명<input id="modalMemberName" /></label>
+              <label>팀<select id="modalMemberTeam"></select></label>
+              <label>세부 그룹<select id="modalMemberSubgroup"></select></label>
+              <label>포지션<select id="modalMemberPosition"></select></label>
+              <label>등급<select id="modalMemberGrade"></select></label>
+            </div>
+          </fieldset>
+          <fieldset class="member-edit-section">
+            <legend>재직 정보</legend>
+            <div class="member-edit-grid member-edit-grid-employment">
+              <label>재직 상태<select id="modalMemberEmploymentStatus"><option>재직</option><option>휴직</option><option>퇴사</option></select></label>
+              <label>퇴사일<input id="modalMemberLeftDate" type="date" /></label>
+              <label class="member-edit-field-wide">퇴사 사유<input id="modalMemberResignationReason" placeholder="퇴사 사유를 입력하세요" /></label>
+              <div id="modalMemberEmploymentSummary" class="summary-strip member-edit-summary"></div>
+            </div>
+          </fieldset>
+          <fieldset class="member-edit-section">
+            <legend>단축근무</legend>
+            <div class="member-edit-grid member-edit-grid-reduced">
+              <label class="member-edit-check"><input id="modalMemberReducedWork" type="checkbox" /><span>단축근무 대상자</span></label>
+              <label>단축근무 시작일<input id="modalMemberReducedStartDate" type="date" /></label>
+              <label>단축근무 종료일<input id="modalMemberReducedEndDate" type="date" /></label>
+              <label>근무 시작시간<input id="modalMemberReducedStartTime" type="time" value="10:00" /></label>
+              <label>근무 종료시간<input id="modalMemberReducedEndTime" type="time" value="16:00" /></label>
+              <div id="modalMemberReducedSummary" class="summary-strip member-edit-summary"></div>
+            </div>
+          </fieldset>
+        </div>
+        <div class="form-actions standalone">
+          <button class="primary member-modal-save" type="button">저장</button>
+          <button class="secondary member-modal-close" type="button">취소</button>
+        </div>
+      </section>
+    </div>
+    <div class="modal-backdrop" id="operatorDetailModal" aria-hidden="true">
+      <section class="modal operator-detail-modal" role="dialog" aria-modal="true" aria-labelledby="operatorDetailModalTitle">
+        <div class="modal-head">
+          <div>
+            <h2 id="operatorDetailModalTitle">상세 현황</h2>
+            <p id="operatorDetailModalDescription">선택한 항목의 업무와 생산량을 확인합니다.</p>
+          </div>
+          <button class="secondary small operator-detail-close" type="button">닫기</button>
+        </div>
+        <div id="operatorDetailModalBody"></div>
+        <div id="operatorDetailPagination" class="history-pagination" aria-label="상세 목록 페이지">
+          <button class="secondary icon-button operator-detail-page" data-direction="-1" type="button" aria-label="이전 페이지" title="이전 페이지">‹</button>
+          <span id="operatorDetailPageStatus">1 / 1</span>
+          <button class="secondary icon-button operator-detail-page" data-direction="1" type="button" aria-label="다음 페이지" title="다음 페이지">›</button>
+        </div>
+      </section>
+    </div>
+    <div class="modal-backdrop" id="resourceRemainingModal" aria-hidden="true">
+      <section class="modal resource-remaining-modal" role="dialog" aria-modal="true" aria-labelledby="resourceRemainingModalTitle">
+        <div class="modal-head">
+          <div>
+            <h2 id="resourceRemainingModalTitle">월 잔여 공수</h2>
+            <p id="resourceRemainingModalDescription">실제 완료일 기준이며, 관리자가 등록한 재작업도 일반 업무 공수와 동일하게 포함합니다.</p>
+          </div>
+          <button class="secondary small resource-remaining-close" type="button">닫기</button>
+        </div>
+        <div class="metric-grid five resource-remaining-summary">
+          <article class="metric"><span>월 총 가능 공수</span><strong id="remainingCapacityTotal">0H</strong><small id="remainingPeriodLabel">완료일 기준</small></article>
+          <article class="metric"><span>완료 업무 공수</span><strong id="remainingUsedTotal">0H</strong><small>개별 버퍼 포함 리소스 공수</small></article>
+          <article class="metric"><span>절대 잔여 공수</span><strong id="remainingAbsoluteTotal">0H</strong><small>가능 공수 - 완료 공수</small></article>
+          <article class="metric warning"><span>완료 업무 총량</span><strong id="remainingTaskTotal">0건</strong><small id="remainingOutputTotal">결과물 0개</small></article>
+          <article class="metric danger"><span>초과 인력</span><strong id="remainingOverloadTotal">0명</strong><small>절대 잔여 공수 0H 미만</small></article>
+        </div>
+        <div class="table-wrap"><table class="resource-remaining-table"><thead><tr><th>직원</th><th>팀 / 세부 그룹</th><th>완료 업무</th><th>결과물</th><th>월 가능 공수</th><th>완료 공수</th><th>절대 잔여</th><th>프로젝트 기준 잔여</th><th>회사 기준 잔여</th><th>절대 가동률</th></tr></thead><tbody id="resourceRemainingRows"></tbody></table></div>
+        <div class="pagination"><button id="resourceRemainingPrev" class="secondary" type="button">이전</button><span id="resourceRemainingPage">1 / 1</span><button id="resourceRemainingNext" class="secondary" type="button">다음</button></div>
+      </section>
+    </div>
+    <div class="modal-backdrop" id="emptyOutputConfirmModal" aria-hidden="true">
+      <section class="modal empty-output-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="emptyOutputConfirmTitle">
+        <div class="modal-head">
+          <div>
+            <h2 id="emptyOutputConfirmTitle">지정 결과물이 없습니다</h2>
+            <p>결과물 없이 일정 업무로 등록하시겠습니까?</p>
+          </div>
+        </div>
+        <label>수동 공수(H) <span class="optional-label">선택</span>
+          <input id="emptyOutputManualHours" type="number" min="0" step="0.25" placeholder="미입력 시 0H" />
+          <small>입력한 값이 이 업무의 기준공수로 저장됩니다.</small>
+        </label>
+        <div id="emptyOutputHoursPreview" class="summary-strip">등록 공수 0H</div>
+        <div class="form-actions standalone">
+          <button id="emptyOutputConfirmSave" class="primary" type="button">네, 등록</button>
+          <button id="emptyOutputConfirmCancel" class="secondary" type="button">아니오</button>
+        </div>
+      </section>
+    </div>
+    <div class="modal-backdrop" id="assignmentConflictModal" aria-hidden="true">
+      <section class="modal assignment-conflict-modal" role="alertdialog" aria-modal="true" aria-labelledby="assignmentConflictTitle">
+        <div class="modal-head">
+          <div>
+            <h2 id="assignmentConflictTitle">일정 충돌이 감지되었습니다</h2>
+            <p id="assignmentConflictDescription">선택한 담당자의 일일 배정 공수가 8H를 초과합니다.</p>
+          </div>
+        </div>
+        <div id="assignmentConflictSummary" class="task-detail-summary"></div>
+        <div id="assignmentConflictDates" class="assignment-conflict-dates"></div>
+        <div class="table-wrap assignment-conflict-table-wrap">
+          <table>
+            <thead><tr><th>업무번호</th><th>프로젝트</th><th>업무명</th><th>기간</th><th>기준공수</th><th>일 배분</th></tr></thead>
+            <tbody id="assignmentConflictRows"></tbody>
+          </table>
+        </div>
+        <div class="form-actions standalone">
+          <button id="assignmentConflictConfirm" class="primary" type="button">그래도 이 담당자에게 할당</button>
+          <button id="assignmentConflictCancel" class="secondary" type="button">아니오, 담당자 다시 선택</button>
+        </div>
+      </section>
+    </div>
+    <div class="modal-backdrop" id="recordEditModal" aria-hidden="true">
+      <section class="modal record-edit-dialog" role="dialog" aria-modal="true" aria-labelledby="recordEditModalTitle">
+        <div class="modal-head">
+          <div>
+            <h2 id="recordEditModalTitle">정보 수정</h2>
+            <p id="recordEditModalDescription">선택한 리스트 항목을 수정합니다.</p>
+          </div>
+          <button class="secondary small record-edit-close" type="button">닫기</button>
+        </div>
+        <div id="recordEditModalBody" class="form-grid compact"></div>
+        <p id="recordEditError" class="modal-error" hidden></p>
+        <div class="form-actions standalone">
+          <button class="primary record-edit-save" type="button">저장</button>
+          <button class="secondary record-edit-close" type="button">취소</button>
+        </div>
+      </section>
+    </div>
+    <div class="modal-backdrop" id="taskDetailModal" aria-hidden="true">
+      <section class="modal task-detail-modal" role="dialog" aria-modal="true" aria-labelledby="taskDetailTitle">
+        <div class="modal-head">
+          <div>
+            <h2 id="taskDetailTitle">업무 세부사항</h2>
+            <p id="taskDetailMeta">수정 요청, 검수 의견과 진행 메모를 누적 기록합니다.</p>
+          </div>
+          <button class="secondary small task-detail-close" type="button">닫기</button>
+        </div>
+        <div id="taskDetailSummary" class="task-detail-summary"></div>
+        <section id="taskDetailComposer" class="task-detail-composer">
+          <label>기록 유형<select id="taskDetailNoteType"><option>수정 요청</option><option>검수 의견</option><option>진행 메모</option><option>고객 요청</option><option>기타</option></select></label>
+          <label class="task-detail-note-field">세부 내용<textarea id="taskDetailNoteContent" rows="4" placeholder="수정 요청 사항이나 진행 상황을 입력하세요."></textarea></label>
+          <button id="taskDetailNoteSave" class="primary" type="button">기록 추가</button>
+        </section>
+        <div id="taskDetailNoteList" class="task-detail-note-list"></div>
+        <div class="history-pagination" aria-label="업무 세부사항 페이지">
+          <button id="taskDetailPrev" class="secondary icon-button" type="button" aria-label="이전 페이지" title="이전 페이지">‹</button>
+          <span id="taskDetailPage">1 / 1</span>
+          <button id="taskDetailNext" class="secondary icon-button" type="button" aria-label="다음 페이지" title="다음 페이지">›</button>
+        </div>
+      </section>
+    </div>
+    <div class="modal-backdrop" id="systemAlertModal" aria-hidden="true">
+      <section class="modal system-alert-modal" role="alertdialog" aria-modal="true" aria-labelledby="systemAlertTitle">
+        <div class="modal-head">
+          <div>
+            <h2 id="systemAlertTitle">데이터 확인이 필요합니다</h2>
+            <p id="systemAlertMessage"></p>
+          </div>
+          <button id="systemAlertCloseTop" class="secondary small" type="button">닫기</button>
+        </div>
+        <div id="systemAlertDetail" class="summary-strip"></div>
+        <div class="form-actions standalone">
+          <button id="systemAlertAction" class="primary" type="button">새로고침</button>
+          <button id="systemAlertClose" class="secondary" type="button">닫기</button>
+        </div>
+      </section>
+    </div>
+    <div class="modal-backdrop" id="workResourceDetailModal" aria-hidden="true">
+      <section class="modal work-resource-detail-modal" role="dialog" aria-modal="true" aria-labelledby="workResourceDetailTitle">
+        <div class="modal-head">
+          <div>
+            <div id="workResourceDetailBadges" class="work-resource-detail-badges"></div>
+            <h2 id="workResourceDetailTitle">업무 자료 상세</h2>
+            <p id="workResourceDetailMeta"></p>
+          </div>
+          <button class="secondary small work-resource-detail-close" type="button">닫기</button>
+        </div>
+        <div id="workResourceDetailContent" class="work-resource-detail-content"></div>
+        <div id="workResourceDetailImages" class="work-resource-image-grid"></div>
+        <div id="workResourceDetailActions" class="form-actions standalone"></div>
+      </section>
+    </div>
+    <div class="modal-backdrop" id="projectHistoryModal" aria-hidden="true">
+      <section class="modal project-history-modal" role="dialog" aria-modal="true" aria-labelledby="projectHistoryModalTitle">
+        <div class="modal-head">
+          <div>
+            <h2 id="projectHistoryModalTitle">프로젝트 변경이력</h2>
+            <p id="projectHistoryModalDescription">프로젝트의 구성, 팀, 담당자, 구성원 변경을 최신순으로 확인합니다.</p>
+          </div>
+          <button class="secondary small project-history-close" type="button">닫기</button>
+        </div>
+        <div id="projectHistorySummary" class="operator-detail-summary"></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>변경일</th><th>구분</th><th>변경 항목</th><th>이전 값</th><th>변경 값</th><th>변경 사유</th></tr></thead>
+            <tbody id="projectHistoryModalRows"></tbody>
+          </table>
+        </div>
+        <div class="history-pagination" aria-label="변경이력 페이지">
+          <button id="historyPrevPage" class="secondary icon-button history-page" data-direction="-1" type="button" aria-label="이전 페이지" title="이전 페이지">‹</button>
+          <span id="historyPageStatus">1 / 1</span>
+          <button id="historyNextPage" class="secondary icon-button history-page" data-direction="1" type="button" aria-label="다음 페이지" title="다음 페이지">›</button>
+        </div>
+      </section>
+    </div>
+    <script src="./vendor/jszip.min.js"></script>
+    <script src="./xlsx-import.js"></script>
+    <script src="./xlsx-export.js"></script>
+    <script src="./supabase-config.js"></script>
+    <script src="./supabase-client.js"></script>
+    <script src="./supabase-data.js"></script>
+    <script src="./employee-review-management.js"></script>
+    <script src="./daily-status.js"></script>
+    <script src="./app.js"></script>
+    <script>EmployeeReviewManagement.bind(); DailyStatus.bind();</script>
+  </body>
+</html>

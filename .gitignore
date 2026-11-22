@@ -1,0 +1,21 @@
+# Local archives and generated artifacts
+*.zip
+*.xlsx
+output/
+tmp/
+.DS_Store
+node_modules/
+# Credentials, runtime state, and database exports
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.dump
+*.backup
+backups/private/
+# Legacy manual account setup scripts containing fixed test passwords
+supabase/008_manual_worker_setup.sql
+supabase/010_after_auth_account_setup_template.sql
+# Per-deployment connection config; copy the tracked example locally.
+supabase-config.js

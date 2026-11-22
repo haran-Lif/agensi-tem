@@ -1,0 +1,202 @@
+DB 연결 확인 예시 쿼리
+작성일: 2026-07-10
+용도: DBeaver에서 데이터 연결 누락 여부를 확인하기 위한 복붙용 SQL
+
+사용 방법
+- 각 쿼리를 하나씩 실행합니다.
+- 결과가 0건이면 해당 항목은 연결 누락이 없다는 뜻입니다.
+- 결과가 나오면 해당 행은 연결이 끊긴 데이터이므로 프로젝트/직원/산출물 기준정보를 먼저 확인하세요.
+
+
+[1] 담당 프로젝트명이 실제 프로젝트에 없는 계정
+
+select
+  aup.user_id,
+  p.login_id,
+  aup.project_name
+from public.app_user_projects aup
+join public.app_profiles p on p.user_id = aup.user_id
+left join public.projects pr on pr.project_name = aup.project_name
+where pr.project_id is null;
+
+
+[2] 프로젝트 없는 업무
+
+select t.task_id, t.project_id
+from public.task_history t
+left join public.projects p on p.project_id = t.project_id
+where p.project_id is null;
+
+
+[3] 직원 없는 업무 담당자
+
+select t.task_id, t.owner_employee_id
+from public.task_history t
+left join public.employees e on e.employee_id = t.owner_employee_id
+where t.owner_employee_id is not null
+  and e.employee_id is null;
+
+
+[4] 업무 없는 산출물 이력
+
+select o.output_id, o.task_id
+from public.output_history o
+left join public.task_history t on t.task_id = o.task_id
+where t.task_id is null;
+
+
+[5] 프로젝트 없는 산출물 이력
+
+select o.output_id, o.project_id
+from public.output_history o
+left join public.projects p on p.project_id = o.project_id
+where p.project_id is null;
+
+
+[6] 직원 없는 산출물 작업자
+
+select o.output_id, o.owner_employee_id
+from public.output_history o
+left join public.employees e on e.employee_id = o.owner_employee_id
+where o.owner_employee_id is not null
+  and e.employee_id is null;
+
+
+[7] 프로젝트 없는 산출물 기준
+
+select r.rule_id, r.project_id
+from public.output_rules r
+left join public.projects p on p.project_id = r.project_id
+where p.project_id is null;
+
+
+[8] 없는 환산 기준을 참조하는 산출물 기준
+
+select r.rule_id, r.conversion_target_rule_id
+from public.output_rules r
+left join public.output_rules target
+  on target.rule_id = r.conversion_target_rule_id
+where r.conversion_target_rule_id is not null
+  and target.rule_id is null;
+
+
+[9] 프로젝트 없는 프로젝트 인력 배정
+
+select pm.assignment_id, pm.project_id
+from public.project_members pm
+left join public.projects p on p.project_id = pm.project_id
+where p.project_id is null;
+
+
+[10] 직원 없는 프로젝트 인력 배정
+
+select pm.assignment_id, pm.employee_id
+from public.project_members pm
+left join public.employees e on e.employee_id = pm.employee_id
+where e.employee_id is null;
+
+
+[11] 직원 없는 worker_task_status
+
+select w.assignment_id, w.employee_id
+from public.worker_task_status w
+left join public.employees e on e.employee_id = w.employee_id
+where e.employee_id is null;
+
+
+[12] 업무 없는 worker_task_status
+
+select w.assignment_id, w.task_id
+from public.worker_task_status w
+left join public.task_history t on t.task_id = w.task_id
+where t.task_id is null;
+
+
+[13] 앱 프로필 표시명과 직원명이 매칭되지 않는 계정
+
+select p.login_id, p.display_name
+from public.app_profiles p
+left join public.employees e on e.employee_name = p.display_name
+where p.status = '사용'
+  and e.employee_id is null;
+
+
+[14] 새 권한 check constraint 확인
+
+select conname, pg_get_constraintdef(oid) as definition
+from pg_constraint
+where conrelid = 'public.app_profiles'::regclass
+  and conname = 'app_profiles_role_check';
+
+
+[15] 계정별 담당 프로젝트 확인
+
+select
+  p.login_id,
+  p.display_name,
+  p.role,
+  p.status,
+  string_agg(aup.project_name, ', ' order by aup.project_name) as projects
+from public.app_profiles p
+left join public.app_user_projects aup
+  on aup.user_id = p.user_id
+group by p.login_id, p.display_name, p.role, p.status
+order by p.login_id;
+
+
+[16] 업무별 산출물 합계 확인
+
+select
+  t.task_id,
+  t.task_title,
+  count(o.output_id) as output_type_count,
+  coalesce(sum(o.quantity), 0) as output_count,
+  coalesce(sum(o.quantity * o.standard_hours_per_unit), 0) as output_hours,
+  t.planned_hours
+from public.task_history t
+left join public.output_history o
+  on o.task_id = t.task_id
+group by t.task_id, t.task_title, t.planned_hours
+order by t.task_id;
+
+
+[17] 산출물 기준과 실제 산출물명 매칭되지 않는 후보
+
+select distinct
+  o.project_id,
+  o.deliverable_name
+from public.output_history o
+left join public.output_rules r
+  on r.project_id = o.project_id
+ and r.deliverable_name = o.deliverable_name
+where r.rule_id is null
+order by o.project_id, o.deliverable_name;
+
+
+[18] project_id는 같지만 task_history와 output_history의 project_id가 다른 산출물
+
+select
+  o.output_id,
+  o.task_id,
+  t.project_id as task_project_id,
+  o.project_id as output_project_id
+from public.output_history o
+join public.task_history t
+  on t.task_id = o.task_id
+where t.project_id <> o.project_id;
+
+
+[19] 프로젝트명 중복 확인
+
+select project_name, count(*) as count
+from public.projects
+group by project_name
+having count(*) > 1;
+
+
+[20] 직원명 중복 확인
+
+select employee_name, count(*) as count
+from public.employees
+group by employee_name
+having count(*) > 1;

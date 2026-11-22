@@ -1,0 +1,228 @@
+칼럼별 데이터 인터페이스
+작성일: 2026-07-13
+대상: OPS 프로젝트 운영 관제 HTML + Supabase public schema
+
+1. HTML 로드/저장 테이블
+
+로드 대상
+- projects
+- teams
+- positions
+- employees
+- project_members
+- task_history
+- output_history
+- output_rules
+- project_changes
+- worker_task_status
+- app_profiles
+- app_user_projects
+- app_settings
+
+운영 데이터 저장 대상
+- projects
+- teams
+- positions
+- employees
+- project_members
+- task_history
+- output_history
+- output_rules
+- project_changes
+- worker_task_status
+- app_settings
+
+계정/권한 저장 대상
+- app_profiles
+- app_user_projects
+- 계정 생성/수정은 app_admin_upsert_auth_account RPC 사용
+
+
+2. 주요 연결 기준
+
+- projects.project_id -> project_members.project_id
+- projects.project_id -> task_history.project_id
+- projects.project_id -> output_history.project_id
+- projects.project_id -> output_rules.project_id
+- projects.project_id -> project_changes.project_id
+- projects.project_id -> projects.parent_project_id (운영·구축 추가/확장 계약 기준)
+- employees.employee_id -> project_members.employee_id
+- employees.employee_id -> task_history.owner_employee_id
+- employees.employee_id -> output_history.owner_employee_id
+- employees.employee_id -> project_changes.changed_by_employee_id
+- employees.employee_id -> worker_task_status.employee_id
+- teams.team_id -> employees.team_id
+- teams.team_id -> projects.assigned_team_id
+- positions.position_id -> employees.position_id
+- task_history.task_id -> output_history.task_id
+- task_history.task_id -> worker_task_status.task_id
+- output_rules.rule_id -> output_rules.conversion_target_rule_id
+- app_profiles.user_id -> app_user_projects.user_id
+- app_profiles.user_id -> worker_task_status.user_id
+- app_user_projects.project_name -> projects.project_name
+- app_profiles.display_name -> employees.employee_name
+
+
+3. 테이블별 인터페이스
+
+projects
+- project_id: TEXT, PK, 프로젝트 고유 ID
+- client_name: TEXT, 고객사
+- project_name: TEXT, 프로젝트 과업명. app_user_projects.project_name과 이름 매칭
+- direction: TEXT, 운영/구축/이커머스 등 방향성
+- status: TEXT, 진행/종료
+- start_date: DATE, 계약 시작일
+- end_date: DATE, 계약 종료일
+- monthly_contract_amount: NUMERIC, 월 계약금
+- total_contract_amount: NUMERIC, 총 계약금
+- planned_people: NUMERIC, 계약 인원
+- management_people: INTEGER, 프로젝트 관리 인원. 실무자와 합산해 총 투입 인원 계산
+- parent_project_id: TEXT, 운영·구축 추가/확장 계약의 기준 projects.project_id. 단독 계약은 NULL
+- note: TEXT, 종료 사유/메모
+- unit_price: NUMERIC, 월 계약금/계약 인원 기준 1인 월 평단가
+- assigned_team_id: TEXT, teams.team_id 연결 의도
+- sla_days: INTEGER, 프로젝트 기본 SLA 영업일
+
+teams
+- team_id: TEXT, PK, 팀 고유 ID
+- team_name: TEXT, 팀명
+- base_group: TEXT, 기본 업무 그룹
+- subgroup_name: TEXT, 대표 세부 그룹
+- subgroups: JSONB, 세부 그룹 목록
+- active_yn: TEXT, Y/N
+- note: TEXT, 메모
+
+positions
+- position_id: TEXT, PK, 포지션 고유 ID
+- position_name: TEXT, 포지션명
+- active_yn: TEXT, Y/N
+- note: TEXT, 메모
+
+employees
+- employee_id: TEXT, PK, 직원 고유 ID
+- employee_name: TEXT, 직원명. app_profiles.display_name과 이름 매칭
+- team_id: TEXT, teams.team_id
+- position_id: TEXT, positions.position_id
+- grade: TEXT, 등급
+- employment_status: TEXT, 재직/휴직/퇴사
+- joined_date: DATE, 입사일
+- left_date: DATE, 퇴사일
+- resignation_reason: TEXT, 퇴사 사유. 퇴사 상태일 때 필수 입력
+- subgroup_name: TEXT, 세부 그룹
+- reduced_work_yn: CHAR(1), 단축근무 대상 여부 Y/N
+- reduced_work_start_date: DATE, 단축근무 시작일
+- reduced_work_end_date: DATE, 단축근무 종료일
+- reduced_work_start_time: TIME, 단축근무 시작시간
+- reduced_work_end_time: TIME, 단축근무 종료시간
+- reduced_daily_hours: NUMERIC, 점심시간 제외 1일 실근무시간
+- note: TEXT, 메모
+
+project_members
+- assignment_id: TEXT, PK, 배정 ID
+- project_id: TEXT, projects.project_id
+- employee_id: TEXT, employees.employee_id
+- role: TEXT, 프로젝트 내 역할
+- assigned_from: DATE, 투입 시작일
+- assigned_to: DATE, 투입 종료일
+- active_yn: TEXT, Y/N
+- change_reason: TEXT, 변경 사유
+
+task_history
+- task_id: TEXT, PK, 업무 ID
+- project_id: TEXT, projects.project_id
+- request_date: DATE, 요청일/접수일
+- task_title: TEXT, 업무명
+- task_type: TEXT, 업무/산출물 분류
+- request_channel: TEXT, 요청 채널
+- difficulty: TEXT, 난이도
+- urgent_yn: TEXT, Y/N
+- requester_name: TEXT, 요청자
+- owner_employee_id: TEXT, employees.employee_id
+- planned_hours: NUMERIC, 촬영 유형과 개별 버퍼가 적용된 기준공수 합계
+- effort_buffer_pct: NUMERIC, 업무 건별 공수 가감 버퍼율(-100 이상 양수/음수)
+- photo_type: TEXT, 일반/화보컷/비화보컷. 각각 100%/50%/150% 배율
+- status: TEXT, 요청/진행/검수/완료/반려/취소 등
+- due_date: DATE, 완료 예정일
+- completed_date: DATE, 실제 완료일
+- rework_yn: TEXT, Y/N
+- rejected_yn: TEXT, Y/N
+- approval_delay_yn: TEXT, Y/N
+- night_weekend_yn: TEXT, Y/N
+- note: TEXT/JSON META, 업로드 키/importKeys/SLA 메타
+
+output_history
+- output_id: TEXT, PK, 산출물 이력 ID
+- task_id: TEXT, task_history.task_id
+- project_id: TEXT, projects.project_id
+- deliverable_name: TEXT, 산출물명
+- quantity: NUMERIC, Count
+- standard_hours_per_unit: NUMERIC, 단위 기준공수
+- owner_employee_id: TEXT, employees.employee_id 연결 의도
+- inspection_status: TEXT, 검수 상태
+- file_link: TEXT, 파일 링크
+- note: TEXT, 메모
+
+output_rules
+- rule_id: TEXT, PK, 산출물 기준 ID
+- project_id: TEXT, projects.project_id
+- deliverable_name: TEXT, 산출물 명칭
+- standard_hours: NUMERIC, 산출물 1건 기준공수
+- sla_days: INTEGER, 산출물별 SLA 영업일
+- sla_enabled: BOOLEAN, true일 때 산출물별 SLA 적용
+- conversion_target_rule_id: TEXT, output_rules.rule_id 자기참조
+- active_from: DATE, 적용 시작일
+- active_to: DATE, 적용 종료일
+- active_yn: TEXT, Y/N
+- note: TEXT, 메모
+
+project_changes
+- change_id: TEXT, PK, 변경 이력 ID
+- project_id: TEXT, projects.project_id
+- changed_at: DATE, 변경일
+- category: TEXT, 변경 카테고리
+- field_name: TEXT, 변경 항목
+- before_value: TEXT, 이전 값
+- after_value: TEXT, 변경 값
+- reason: TEXT, 변경 사유
+- changed_by_employee_id: TEXT, employees.employee_id
+
+worker_task_status
+- assignment_id: TEXT, PK, 실무자 작업상태 ID
+- task_id: TEXT, task_history.task_id
+- employee_id: TEXT, employees.employee_id
+- user_id: UUID, app_profiles.user_id
+- status: TEXT, 미처리/처리중/보류/완료
+- started_at: DATE, 시작일
+- completed_at: DATE, 완료일
+- updated_at: TIMESTAMPTZ, 수정일시
+
+app_profiles
+- user_id: UUID, PK, auth.users.id
+- login_id: TEXT, 로그인 ID
+- display_name: TEXT, 화면 표시명. employees.employee_name과 이름 매칭
+- team_name: TEXT, 팀명
+- subgroup_name: TEXT, 세부 그룹
+- role: TEXT, admin/operator_all/operator_no_profit/operator_output_admin/portal/worker
+- status: TEXT, 사용/중지
+- created_at: TIMESTAMPTZ, 생성일
+- updated_at: TIMESTAMPTZ, 수정일
+
+app_user_projects
+- user_id: UUID, app_profiles.user_id
+- project_name: TEXT, projects.project_name과 이름 매칭
+- created_at: TIMESTAMPTZ, 생성일
+
+app_settings
+- setting_key: TEXT, PK, 설정 키
+- setting_value: JSONB, 설정 값. productivity 예: {"workingDays": 21, "projectBuffer": 15, "companyBuffer": -100, "buffer": 15}
+- updated_at: TIMESTAMPTZ, 수정일
+- updated_by: UUID, auth.users.id
+
+
+4. 주의해야 하는 느슨한 연결
+
+- app_user_projects.project_name은 projects.project_name과 이름 기준입니다. 프로젝트명을 바꾸면 권한 프로젝트명도 같이 바꿔야 합니다.
+- app_profiles.display_name은 employees.employee_name과 이름 기준입니다. 실무자 작업함은 이름이 다르면 매칭이 어긋날 수 있습니다.
+- output_history.owner_employee_id는 employees.employee_id 연결 의도지만 현재 FK는 아닙니다.
+- projects.assigned_team_id는 teams.team_id 연결 의도지만 현재 FK는 아닙니다.
+- 006_worker_task_access.sql은 operator_output_admin 권한을 포함한 최신 파일을 사용해야 합니다.

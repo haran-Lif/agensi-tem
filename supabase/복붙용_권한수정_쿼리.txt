@@ -1,0 +1,97 @@
+권한 수정 복붙용 쿼리
+작성일: 2026-07-10
+
+변경 명칭
+- 새 권한 코드: operator_output_admin
+- 화면 표시명: 운영자 메뉴 + 업무 템플릿
+- 허용 범위: 운영자 메뉴 전체 + 관리자 메뉴 중 업무 템플릿만
+
+적용 순서
+1. 아래 [1] 새 권한 허용 쿼리 실행
+2. 007_account_admin_rpc.sql 전체 실행
+   - DBeaver에서는 Ctrl+A로 전체 선택 후 Execute SQL Script(Alt+X) 권장
+3. 아래 [2] worker 계정 권한/이름/프로젝트 지정 쿼리 실행
+4. 아래 [3] 확인 쿼리 실행
+
+
+[1] 새 권한 operator_output_admin 허용
+
+begin;
+
+alter table public.app_profiles
+  drop constraint if exists app_profiles_role_check;
+
+alter table public.app_profiles
+  add constraint app_profiles_role_check
+  check (role in (
+    'admin',
+    'operator_all',
+    'operator_no_profit',
+    'operator_output_admin',
+    'portal',
+    'worker'
+  ));
+
+comment on constraint app_profiles_role_check on public.app_profiles is
+  '앱 로그인 권한. operator_output_admin은 운영자 메뉴와 관리자 업무 템플릿만 허용';
+
+commit;
+
+
+[2] worker 계정 세팅
+
+update public.app_profiles
+set role = 'operator_output_admin',
+    display_name = 'test',
+    updated_at = now()
+where login_id = 'worker';
+
+delete from public.app_user_projects
+where user_id = (
+  select user_id
+  from public.app_profiles
+  where login_id = 'worker'
+);
+
+insert into public.app_user_projects (user_id, project_name)
+select user_id, 'test1'
+from public.app_profiles
+where login_id = 'worker'
+on conflict do nothing;
+
+
+[3] 적용 확인
+
+select
+  p.login_id,
+  p.display_name,
+  p.role,
+  p.status,
+  string_agg(aup.project_name, ', ' order by aup.project_name) as projects
+from public.app_profiles p
+left join public.app_user_projects aup
+  on aup.user_id = p.user_id
+where p.login_id = 'worker'
+group by p.login_id, p.display_name, p.role, p.status;
+
+
+[4] 007 함수 적용 확인
+
+select proname
+from pg_proc
+where proname = 'app_admin_upsert_auth_account';
+
+
+정상 결과 기준
+- [3] 결과에서 login_id = worker
+- display_name = test
+- role = operator_output_admin
+- status = 사용
+- projects = test1
+- [4] 결과에서 app_admin_upsert_auth_account 1건 노출
+
+
+주의
+- 007_account_admin_rpc.sql에서 Unterminated dollar quote 에러가 나면 SQL 일부만 실행된 것입니다.
+- 007 파일 전체를 선택하고 Execute SQL Script(Alt+X)로 다시 실행하세요.
+- extension "pgcrypto" already exists, skipping 메시지는 정상 안내입니다.
