@@ -1,6 +1,6 @@
 # 프로젝트 운영 관제 시스템
 
-최종 기능 기준 **v143**. 정적 HTML/JavaScript 프런트엔드와 Supabase Auth/PostgreSQL/Storage 기반입니다.
+최종 기능 기준 **v144**. 정적 HTML/JavaScript 프런트엔드와 Supabase Auth/PostgreSQL/Storage 기반입니다.
 
 ## 다른 프로젝트에서 사용
 

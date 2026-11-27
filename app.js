@@ -3022,8 +3022,11 @@ async function completeRemoteLogin() {
   const profile = await remoteAuth.loadCurrentProfile();
   applyRemoteProfile(profile);
   showLogin("Supabase 운영 데이터를 불러오고 있습니다.");
-  const operationalData = await remoteData.loadAll();
-  dbSchemaIssues = remoteData.validateSchema ? await remoteData.validateSchema() : [];
+  const [operationalData, schemaIssues] = await Promise.all([
+    remoteData.loadAll(),
+    remoteData.validateSchema ? remoteData.validateSchema() : Promise.resolve([]),
+  ]);
+  dbSchemaIssues = schemaIssues;
   applyOperationalDb(operationalData);
   applyRemoteProfile(profile);
   const repairedOperationalData = profile.role === "admin" && (dbRelationshipRepairNeeded || dbOutputRepairNeeded);
@@ -6357,7 +6360,8 @@ function currentWorkerMember() {
 function selectedMyWorkMember() {
   const account = currentAccount();
   if (account?.role !== "admin") return currentWorkerMember();
-  const accessibleTasks = tasks.filter((task) => accessibleProjectNames().has(task.project));
+  const accessibleNames = accessibleProjectNames();
+  const accessibleTasks = tasks.filter((task) => accessibleNames.has(task.project));
   const activeMembers = members.filter((member) => isWorkforceMember(member, accessibleTasks));
   let selected = activeMembers.find((member) => member._id === state.myWorkMemberId);
   if (!selected) {
@@ -7868,7 +7872,8 @@ function renderAll() {
   applyAccountPermissions();
   syncActiveViewDom();
   if ($("#dataSourceLabel")) {
-    const scopedTotal = tasks.filter((task) => accessibleProjectNames().has(task.project)).length;
+    const accessibleNames = accessibleProjectNames();
+    const scopedTotal = tasks.filter((task) => accessibleNames.has(task.project)).length;
     $("#dataSourceLabel").textContent = PROJECT_REQUIRED_VIEWS.has(state.view) && state.project === "전체"
       ? "프로젝트 선택 후 데이터를 조회합니다"
       : `${currentPeriodLabel()} · Supabase DB · 접근 가능 업무 ${scopedTotal}건`;
@@ -7899,7 +7904,7 @@ function renderAll() {
   renderProjectHistoryModal();
   renderExcelImportResult();
   updateAdminFilterVisibility();
-  if ($("#simulationResult")) renderStaffing(items);
+  if (state.view === "staffing" && $("#simulationResult")) renderStaffing(items);
   if (state.view === "portal" && $("#portalRows")) renderPortal(items);
   renderOperatorDetail(items);
   scheduleOperationalPersist();

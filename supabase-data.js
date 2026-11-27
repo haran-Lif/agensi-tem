@@ -39,44 +39,35 @@
     }
   }
 
-  async function loadAll() {
-    const optionalTables = ["work_resources", "notification_states", "upload_batches", "upload_batch_items"];
-    const names = [...Object.keys(tableKeys).filter((name) => !optionalTables.includes(name)), "app_profiles", "app_user_projects"];
-    const results = await Promise.all(names.map(async (name) => [name, await selectAll(name)]));
-    try {
-      results.push(["employee_review_entries", await selectAll("employee_review_entries")]);
-      results.push(["employee_review_ready", true]);
-    } catch (error) {
-      console.info("직원평가관리 자료 로드 실패", error);
-      results.push(["employee_review_entries", []], ["employee_review_ready", false]);
-    }
-    try {
-      results.push(["work_resources", await selectAll("work_resources")]);
-    } catch (error) {
-      console.info("work_resources 테이블을 불러오지 못해 업무 자료를 빈 목록으로 시작합니다.", error);
-      results.push(["work_resources", []]);
-    }
-    try {
-      results.push(["app_settings", await selectAll("app_settings")]);
-    } catch (error) {
-      console.info("app_settings 테이블을 불러오지 못해 기본 설정을 사용합니다.", error);
-      results.push(["app_settings", []]);
-    }
-    try {
-      results.push(["notification_states", await selectAll("notification_states")]);
-    } catch (error) {
-      console.info("notification_states 테이블을 불러오지 못해 알림 상태를 임시 상태로 시작합니다.", error);
-      results.push(["notification_states", []]);
-    }
-    for (const table of ["upload_batches", "upload_batch_items"]) {
-      try {
-        results.push([table, await selectAll(table)]);
-      } catch (error) {
-        console.info(`${table} 테이블을 불러오지 못해 빈 이력으로 시작합니다.`, error);
-        results.push([table, []]);
+  // Bound parallel reads so large histories do not flood the connection pool.
+  async function mapConcurrent(items, limit, mapper) {
+    const results = new Array(items.length);
+    let next = 0;
+    await Promise.all(Array.from({ length: Math.min(limit, items.length) }, async () => {
+      while (next < items.length) {
+        const index = next++;
+        results[index] = await mapper(items[index]);
       }
-    }
-    return Object.fromEntries(results);
+    }));
+    return results;
+  }
+
+  async function loadAll() {
+    const optionalTables = ["employee_review_entries", "work_resources", "app_settings", "notification_states", "upload_batches", "upload_batch_items"];
+    const names = [...Object.keys(tableKeys).filter((name) => !optionalTables.includes(name)), "app_profiles", "app_user_projects", ...optionalTables];
+    let employeeReviewReady = false;
+    const results = await mapConcurrent(names, 6, async (name) => {
+      try {
+        const rows = await selectAll(name);
+        if (name === "employee_review_entries") employeeReviewReady = true;
+        return [name, rows];
+      } catch (error) {
+        if (!optionalTables.includes(name)) throw error;
+        console.info(`${name} 테이블을 불러오지 못해 기본값을 사용합니다.`, error);
+        return [name, []];
+      }
+    });
+    return { ...Object.fromEntries(results), employee_review_ready: employeeReviewReady };
   }
 
   async function loadTables(names) {
@@ -86,15 +77,15 @@
   }
 
   async function validateSchema() {
-    const issues = [];
-    for (const [table, columns] of Object.entries(requiredColumns)) {
+    const results = await mapConcurrent(Object.entries(requiredColumns), 4, async ([table, columns]) => {
       try {
         await auth.authenticatedRequest(`/rest/v1/${table}?select=${encodeURIComponent(columns.join(","))}&limit=0`);
+        return null;
       } catch (error) {
-        issues.push({ table, message: String(error?.message || error || "스키마 확인 실패") });
+        return { table, message: String(error?.message || error || "스키마 확인 실패") };
       }
-    }
-    return issues;
+    });
+    return results.filter(Boolean);
   }
 
   async function upsert(table, rows) {
