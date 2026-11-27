@@ -1,3 +1,5 @@
+> **새 프로젝트 설치는 [bootstrap/README.md](bootstrap/README.md)를 따르세요. 아래는 기존 설치의 변경 이력 안내이며 새 설치 시 순서대로 중복 실행하지 않습니다.**
+
 # Supabase 로그인 연결
 
 ## 1. 테이블과 RLS 생성

@@ -3,21 +3,22 @@
 최종 기능 기준 **v143**. 정적 HTML/JavaScript 프런트엔드와 Supabase Auth/PostgreSQL/Storage 기반입니다.
 
 ## 다른 프로젝트에서 사용
-1. 이 저장소를 복제합니다.
-2. `cp supabase-config.example.js supabase-config.js` 후 새 Supabase URL과 **publishable key**를 입력합니다. service-role/secret 키는 브라우저에 넣지 않습니다.
-3. DB 스키마를 준비합니다. **현재 저장소의 001~027 SQL은 기존 업무 테이블을 전제로 하는 증분 스크립트입니다. 빈 DB에 이것만 실행하면 초기 설치가 완성되지 않습니다.** 운영 구조 JSON은 `backups/schema/`에 보관했습니다. 실행 가능한 전체 복원 덤프와 빈 DB 설치 검증은 별도로 필요합니다.
-4. 기존 DB를 사용할 경우 적용 이력에 맞게 SQL을 검토합니다. 008/010은 테스트 비밀번호를 포함한 수동 계정 보조 스크립트이므로 저장소에서 제외했습니다.
-5. 최초 관리자 계정을 새 Supabase Auth에서 만들고 `app_profiles`에 해당 user_id를 연결합니다. 다른 프로젝트의 Auth UUID와 비밀번호를 그대로 복제하지 않습니다.
-6. 프로젝트·팀·인원·산출물 단가·W/D·목표 H를 새 프로젝트에 맞게 설정합니다.
-7. `python3 -m http.server 8000` 후 브라우저에서 `http://localhost:8000`을 엽니다. 운영 환경은 HTTPS 정적 호스팅을 사용합니다.
-8. `node --test tests/*.test.cjs`와 실제 로그인·저장·역할별 접근을 검증합니다.
+
+**새 프로젝트용 설치 패키지:** [설치 가이드](supabase/bootstrap/README.md).
+
+1. 새 Supabase에서 `supabase/bootstrap/001_schema.sql` 전체 실행.
+2. `002_defaults.sql` 실행 후 Auth 사용자를 생성하고 `003_first_admin.sql`로 최초 관리자 연결.
+3. `supabase-config.example.js`를 `supabase-config.js`로 복사해 새 URL/publishable key 입력.
+4. 정적 웹 서버로 실행 후 팀·직원·프로젝트·산출물 단가·월별 W/D·목표 H를 설정.
+
+기존 운영 데이터 없이 시작합니다. 과거 001~027 변경 SQL을 다시 일괄 실행하지 마세요. 로컬 PostgreSQL 설치/권한/주요 동작 검증을 수행했으며 실제 Supabase 로그인·파일 업로드 확인은 신규 연결 후 필요합니다.
 
 ## 현재 설정 데이터 백업
 `bash scripts/backup-settings.sh`는 PostgreSQL 표준 연결 환경변수(PGHOST/PGPORT/PGDATABASE/PGUSER)와 로컬 비밀번호 저장소(.pgpass 등)를 사용합니다. 인증정보는 Git에 넣지 않습니다.
 
 추출 대상은 public 스키마와 팀·직위·인원·프로젝트·배정·산출물 기준·app_settings·code_master입니다. 업무/평가/이미지/인증 계정은 포함하지 않습니다. 산출물 기준의 참조 관계나 Auth 연결은 새 DB에서 별도 점검해야 합니다. Storage 버킷과 정책은 관련 SQL을 검토해 구성합니다.
 
-**2026-11-24 운영 DB 구조 스냅샷(JSON)을 추출했습니다.** `backups/schema/README.md`에서 범위를 확인하세요. 설정 데이터 행은 아직 추출하지 않았으며, 원클릭 재사용 패키지는 아닙니다. 추출 결과는 `backups/private/`에 보관하며 직원·계약정보를 검토한 뒤 이식용 설정으로 정리합니다.
+**2026-11-24 운영 DB 구조 스냅샷(JSON)을 추출했습니다.** `backups/schema/README.md`에서 범위를 확인하세요. 운영 설정 데이터 행은 복제하지 않습니다. 새 프로젝트용 통합 스키마와 중립적인 기본 설정은 `supabase/bootstrap/`에 별도로 준비했습니다. 추출 결과는 `backups/private/`에 보관하며 직원·계약정보를 검토한 뒤 이식용 설정으로 정리합니다.
 
 ## 주요 화면
 업무 등록/추천, 일간·월간 현황, 리소스/그룹 순위, 프로젝트/팀/템플릿 설정, 자료 관리, 직원평가·가감점, Excel 업로드, 공개 일간 현황.
